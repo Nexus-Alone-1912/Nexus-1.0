@@ -1,0 +1,1168 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10141C">
+<title>NEXUS</title>
+<style>
+:root{--bg:#10141C;--s1:#181F2B;--s2:#222B39;--ac:#38BDF8;--ac2:#2DD4BF;--tx:#F1F5F9;--tx2:#94A3B8;--ok:#22C55E;--warn:#F59E0B;--bad:#EF4444;--bd:#2c3748}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body{display:flex;min-height:100vh}
+a{color:var(--ac)}
+button,input,select,textarea{font:inherit;color:var(--tx)}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+#side{width:236px;background:var(--s1);border-right:1px solid var(--bd);padding:18px 12px;position:sticky;top:0;height:100vh;overflow:auto;flex-shrink:0}
+.logo{font-weight:800;letter-spacing:.14em;font-size:20px;padding:4px 10px 2px;color:var(--ac)}
+.tag{color:var(--tx2);font-size:12px;padding:0 10px 14px}
+.nav{display:block;width:100%;text-align:left;background:none;border:0;border-radius:8px;padding:9px 10px;cursor:pointer;color:var(--tx2)}
+.nav:hover{background:var(--s2);color:var(--tx)}
+.nav.on{background:var(--s2);color:var(--ac);font-weight:600}
+.nav[aria-disabled=true]{opacity:.45;cursor:default}
+.nav[aria-disabled=true]:hover{background:none;color:var(--tx2)}
+.sec{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--tx2);padding:14px 10px 4px}
+#main{flex:1;padding:24px 28px 60px;max-width:1100px;min-width:0}
+h1{font-size:22px;margin:0 0 4px}
+h2{font-size:16px;margin:0 0 10px}
+.sub{color:var(--tx2);margin:0 0 18px}
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.grow{flex:1}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:16px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px;margin-bottom:16px}
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:14px 16px}
+.k{color:var(--tx2);font-size:12px}
+.v{font-size:22px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
+.pos{color:var(--ok)}.neg{color:var(--bad)}.wrn{color:var(--warn)}.mut{color:var(--tx2)}
+.btn{background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:7px 12px;cursor:pointer}
+.btn:hover{border-color:var(--ac)}
+.btn.pri{background:var(--ac);color:#06202e;border-color:var(--ac);font-weight:600}
+.btn.sm{padding:3px 8px;font-size:13px}
+.btn.dng:hover{border-color:var(--bad);color:var(--bad)}
+input,select,textarea{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:7px 9px;width:100%}
+.bar input,.bar select{width:auto}
+label{display:block;font-size:13px;color:var(--tx2);margin-bottom:10px}
+label input,label select,label textarea{margin-top:3px;color:var(--tx)}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:12px;color:var(--tx2);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--bd)}
+td{padding:8px;border-bottom:1px solid var(--bd);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.wrap{overflow-x:auto}
+.badge{display:inline-block;font-size:11px;border:1px solid var(--bd);border-radius:20px;padding:1px 8px;color:var(--tx2)}
+.badge.est{border-color:var(--warn);color:var(--warn)}
+.prog{height:8px;background:var(--s2);border-radius:6px;overflow:hidden;margin:6px 0 4px}
+.prog>i{display:block;height:100%;background:var(--ac2)}
+.prog.w>i{background:var(--warn)}.prog.b>i{background:var(--bad)}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.leg{font-size:12px;color:var(--tx2);display:flex;gap:14px;margin-top:6px}
+.empty{color:var(--tx2);padding:18px;text-align:center}
+dialog{background:var(--s1);color:var(--tx);border:1px solid var(--bd);border-radius:14px;padding:20px;width:min(480px,94vw);max-height:92vh}
+dialog::backdrop{background:rgba(0,0,0,.6)}
+.err{color:var(--bad);min-height:18px;font-size:13px}
+.acts{display:flex;gap:6px;justify-content:flex-end}
+.note{font-size:13px;color:var(--tx2);border-left:3px solid var(--warn);padding:4px 10px;margin:10px 0}
+@media(max-width:820px){
+ body{flex-direction:column}
+ #side{width:100%;height:auto;position:sticky;top:0;z-index:5;display:flex;flex-wrap:nowrap;overflow-x:auto;padding:8px;gap:2px;align-items:center;border-right:0;border-bottom:1px solid var(--bd)}
+ .logo,.tag,.sec{display:none}
+ .nav{width:auto;white-space:nowrap}
+ .nav[aria-disabled=true]{display:none}
+ #main{padding:16px 14px 60px}
+}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.tab{background:var(--s1);border:1px solid var(--bd);border-radius:20px;padding:5px 13px;cursor:pointer}
+.tab[aria-pressed=true]{border-color:var(--ac);color:var(--ac);font-weight:600}
+.calgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.calh{font-size:12px;color:var(--tx2);text-align:center;padding:4px}
+.calcell{background:var(--s1);border:1px solid var(--bd);border-radius:8px;min-height:96px;padding:4px;cursor:pointer;overflow:hidden}
+.calcell.out{opacity:.45}.calcell.tod{border-color:var(--ac)}
+.dn{font-size:12px;color:var(--tx2);margin-bottom:2px}
+.calcell.tod .dn{color:var(--ac);font-weight:700}
+.chip{font-size:11px;border-left:3px solid;padding:0 4px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--s2);border-radius:3px}
+.cnt{display:none;font-size:11px;color:var(--ac)}
+.citem{display:block;width:100%;text-align:left;background:var(--s2);border:0;border-left:4px solid;border-radius:6px;padding:6px 9px;margin-bottom:6px;cursor:pointer}
+.citem:hover{background:#2b3648}
+.ico{display:inline-block;min-width:1.2em}
+@media(max-width:820px){.calcell{min-height:52px}.chip{display:none}.cnt{display:inline}}
+@media print{:root{--bg:#fff;--s1:#fff;--s2:#f1f1f1;--tx:#000;--tx2:#444;--bd:#bbb}#side,.noprint,dialog{display:none!important}body{display:block}#main{max-width:none;padding:0}.card{break-inside:avoid}}
+</style>
+</head>
+<body>
+<nav id="side" aria-label="Navegación principal"></nav>
+<main id="main"></main>
+<dialog id="dlg"></dialog>
+<dialog id="dlg2" style="width:min(400px,92vw)"></dialog>
+
+<script>
+'use strict';
+/* ---------- utilidades ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const crc = n => (n < 0 ? '-' : '') + '₡' + Math.abs(Math.round(n)).toLocaleString('es-CR');
+const ymd = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+const today = () => ymd(new Date());
+const monthOf = s => s.slice(0, 7);
+const shiftMonth = (m, d) => { const [y, mo] = m.split('-').map(Number); return ymd(new Date(y, mo - 1 + d, 1)).slice(0, 7); };
+const monthLabel = m => { const [y, mo] = m.split('-').map(Number); return new Date(y, mo - 1, 1).toLocaleDateString('es-CR', { month: 'long', year: 'numeric' }); };
+const monthShort = m => { const [y, mo] = m.split('-').map(Number); return new Date(y, mo - 1, 1).toLocaleDateString('es-CR', { month: 'short' }).replace('.', ''); };
+const dayLabel = s => new Date(s + 'T00:00:00').toLocaleDateString('es-CR', { day: 'numeric', month: 'short', year: 'numeric' });
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+const opt = (v, cur, label) => `<option value="${esc(v)}"${v === cur ? ' selected' : ''}>${esc(label ?? v)}</option>`;
+const addDays = (s, n) => { const d = new Date(s + 'T00:00:00'); d.setDate(d.getDate() + n); return ymd(d); };
+const daysBetween = (a, b) => Math.round((new Date(b + 'T00:00:00') - new Date(a + 'T00:00:00')) / 864e5);
+
+/* ---------- base de datos local (IndexedDB) ---------- */
+const STORES = ['accounts', 'transactions', 'categories', 'budgets', 'settings', 'events', 'tasks', 'projects', 'jobs', 'edu', 'docs'];
+let db;
+const S = { accounts: [], transactions: [], categories: [], budgets: [], settings: [] };
+let CFG;
+
+function openDB() {
+  return new Promise((res, rej) => {
+    const r = indexedDB.open('nexus', 2);
+    r.onupgradeneeded = () => STORES.forEach(s => { if (!r.result.objectStoreNames.contains(s)) r.result.createObjectStore(s, { keyPath: 'id' }); });
+    r.onsuccess = () => res(r.result);
+    r.onerror = () => rej(r.error);
+  });
+}
+const store = (n, mode = 'readonly') => db.transaction(n, mode).objectStore(n);
+const reqP = r => new Promise((res, rej) => { r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
+const live = n => S[n].filter(x => !x.deleted_at);
+
+async function save(name, obj) {
+  const now = new Date().toISOString();
+  if (!obj.id) obj.id = uuid();
+  if (!obj.created_at) obj.created_at = now;
+  obj.updated_at = now;
+  obj.version = (obj.version || 0) + 1;
+  await reqP(store(name, 'readwrite').put(obj));
+  const i = S[name].findIndex(x => x.id === obj.id);
+  if (i >= 0) S[name][i] = obj; else S[name].push(obj);
+  return obj;
+}
+async function removeRec(name, id) {
+  const o = S[name].find(x => x.id === id);
+  if (!o) return;
+  o.deleted_at = new Date().toISOString(); // tombstone, listo para sincronizar en el futuro
+  await save(name, o);
+}
+
+const DEF_EXP = ['Alimentación','Transporte','Vivienda','Servicios públicos','Educación','Salud','Tecnología','Entretenimiento','Higiene personal','Compras','Deudas','Otros'];
+const DEF_INC = ['Salario','Servicios profesionales','Ventas','Comisiones','Aguinaldo','Bonificaciones','Apoyo económico','Otros'];
+
+async function boot() {
+  db = await openDB();
+  for (const n of STORES) S[n] = await reqP(store(n).getAll());
+  if (!S.categories.length) {
+    for (const n of DEF_EXP) await save('categories', { name: n, type: 'gasto', active: true });
+    for (const n of DEF_INC) await save('categories', { name: n, type: 'ingreso', active: true });
+  }
+  if (!S.accounts.length) await save('accounts', { name: 'Efectivo', institution: '', type: 'efectivo', initial: 0, active: true, currency: 'CRC' });
+  CFG = S.settings.find(x => x.id === 'main');
+  if (!CFG) CFG = await save('settings', { id: 'main', plan: {} });
+  normCfg();
+  try { if (navigator.storage && navigator.storage.persist) await navigator.storage.persist(); } catch (e) {}
+}
+
+/* ---------- cálculos financieros (deterministas) ---------- */
+const accName = id => (S.accounts.find(a => a.id === id) || {}).name || '—';
+const catName = id => (S.categories.find(c => c.id === id) || {}).name || 'Sin categoría';
+function balance(accId) {
+  const a = S.accounts.find(x => x.id === accId);
+  let b = a ? (a.initial || 0) : 0;
+  for (const t of live('transactions')) {
+    if (t.status !== 'confirmado') continue; // pendientes no afectan saldos
+    if (t.type === 'ingreso' && t.account === accId) b += t.amount;
+    else if (t.type === 'gasto' && t.account === accId) b -= t.amount;
+    else if (t.type === 'ajuste' && t.account === accId) b += t.amount;
+    else if (t.type === 'transferencia') { if (t.account === accId) b -= t.amount; if (t.toAccount === accId) b += t.amount; }
+  }
+  return b;
+}
+const activeAccs = () => live('accounts').filter(a => a.active !== false);
+const disponible = () => activeAccs().filter(a => a.type !== 'tarjeta de crédito').reduce((s, a) => s + balance(a.id), 0);
+const deudaTarjetas = () => activeAccs().filter(a => a.type === 'tarjeta de crédito').reduce((s, a) => s + Math.min(0, balance(a.id)), 0);
+function monthStats(m) {
+  let inc = 0, exp = 0;
+  for (const t of live('transactions')) if (t.status === 'confirmado' && monthOf(t.date) === m) {
+    if (t.type === 'ingreso') inc += t.amount; else if (t.type === 'gasto') exp += t.amount;
+  }
+  return { inc, exp };
+}
+function spentByCat(m) {
+  const r = {};
+  for (const t of live('transactions')) if (t.type === 'gasto' && t.status === 'confirmado' && monthOf(t.date) === m) r[t.category || ''] = (r[t.category || ''] || 0) + t.amount;
+  return r;
+}
+const pendingOut = () => live('transactions').filter(t => t.type === 'gasto' && t.status === 'pendiente').reduce((s, t) => s + t.amount, 0);
+
+/* ---------- interfaz ---------- */
+const ui = { view: 'dashboard', month: monthOf(today()), f: { q: '', type: '', account: '', cat: '' } };
+const NAV = [
+  ['dashboard', 'Dashboard'], ['movimientos', 'Movimientos'], ['cuentas', 'Cuentas'], ['presupuestos', 'Presupuestos'],
+  ['sinsalario', 'Planificación sin salario'], ['calendario', 'Calendario'], ['tareas', 'Tareas'], ['objetivos', 'Objetivos y proyectos'],
+  ['independencia', 'Independencia'], ['empleo', 'Empleo'], ['educacion', 'Educación'], ['reportes', 'Reportes'], ['documentos', 'Documentos'],
+  ['config', 'Configuración']
+];
+
+function renderNav() {
+  $('#side').innerHTML = `<div class="logo">NEXUS</div><div class="tag">Organiza tu presente.</div>` +
+    NAV.map(([k, l]) => `<button class="nav${ui.view === k ? ' on' : ''}" data-act="go" data-v="${k}"${ui.view === k ? ' aria-current="page"' : ''}>${l}</button>`).join('') +
+    '';
+}
+function render() {
+  renderNav();
+  const v = { dashboard: vDashboard, movimientos: vMovs, cuentas: vAccounts, presupuestos: vBudgets, sinsalario: vPlan, config: vConfig, calendario: vCalendar, tareas: vTasks, objetivos: vProjects, independencia: vIndep, empleo: vJobs, educacion: vEdu, reportes: vReports, documentos: vDocs }[ui.view] || vDashboard;
+  $('#main').innerHTML = v();
+  const s = $('#main [data-focus]'); if (s) { s.focus(); }
+}
+const monthBar = () => `<div class="bar"><button class="btn sm" data-act="mprev" aria-label="Mes anterior">‹</button><strong style="min-width:150px;text-align:center">${cap(monthLabel(ui.month))}</strong><button class="btn sm" data-act="mnext" aria-label="Mes siguiente">›</button><button class="btn sm" data-act="mnow">Hoy</button></div>`;
+const amtCls = t => t.type === 'ingreso' ? 'pos' : t.type === 'gasto' ? 'neg' : 'mut';
+const amtTxt = t => t.type === 'ingreso' ? '+' + crc(t.amount) : t.type === 'gasto' ? '−' + crc(t.amount) : t.type === 'ajuste' ? (t.amount >= 0 ? '+' : '−') + crc(Math.abs(t.amount)) : crc(t.amount);
+
+function barChart(months) {
+  const data = months.map(m => ({ m, ...monthStats(m) }));
+  const max = Math.max(1, ...data.flatMap(d => [d.inc, d.exp]));
+  const W = 520, H = 170, pad = 14, bw = 15, step = (W - 2 * pad) / data.length;
+  let s = `<svg viewBox="0 0 ${W} ${H + 24}" width="100%" role="img" aria-label="Ingresos frente a gastos de los últimos meses">`;
+  data.forEach((d, i) => {
+    const x = pad + i * step + (step - 2 * bw - 3) / 2, h1 = d.inc / max * H, h2 = d.exp / max * H;
+    s += `<rect x="${x}" y="${H - h1}" width="${bw}" height="${Math.max(h1, d.inc ? 2 : 0)}" fill="#22C55E" rx="2"><title>Ingresos ${crc(d.inc)}</title></rect>`;
+    s += `<rect x="${x + bw + 3}" y="${H - h2}" width="${bw}" height="${Math.max(h2, d.exp ? 2 : 0)}" fill="#EF4444" rx="2"><title>Gastos ${crc(d.exp)}</title></rect>`;
+    s += `<text x="${x + bw + 1}" y="${H + 16}" text-anchor="middle" fill="#94A3B8" font-size="11">${esc(monthShort(d.m))}</text>`;
+  });
+  s += `<line x1="0" x2="${W}" y1="${H}" y2="${H}" stroke="#2c3748"/></svg>`;
+  return s + `<div class="leg"><span><b class="pos">■</b> Ingresos</span><span><b class="neg">■</b> Gastos</span></div>`;
+}
+function catBars(m) {
+  const sp = spentByCat(m), tot = Object.values(sp).reduce((a, b) => a + b, 0);
+  const rows = Object.entries(sp).sort((a, b) => b[1] - a[1]);
+  if (!rows.length) return `<div class="empty">Sin gastos confirmados este mes.</div>`;
+  return rows.map(([id, v]) => { const p = Math.round(v / tot * 100); return `<div><div class="row"><span>${esc(catName(id))}</span><span class="mut">${crc(v)} · ${p} %</span></div><div class="prog"><i style="width:${p}%"></i></div></div>`; }).join('');
+}
+
+function vDashboard() {
+  const st = monthStats(ui.month), net = st.inc - st.exp, debt = deudaTarjetas();
+  const months = []; for (let i = 5; i >= 0; i--) months.push(shiftMonth(ui.month, -i));
+  const buds = live('budgets'), sp = spentByCat(ui.month);
+  const recent = live('transactions').slice().sort((a, b) => (b.date + b.created_at).localeCompare(a.date + a.created_at)).slice(0, 8);
+  return `<h1>Dashboard</h1><p class="sub">Tu situación al día de hoy. Solo los movimientos confirmados afectan los saldos.</p>${monthBar()}
+  <div class="grid">
+   <div class="card"><div class="k">Saldo disponible</div><div class="v ${disponible() < 0 ? 'neg' : ''}">${crc(disponible())}</div></div>
+   <div class="card"><div class="k">Ingresos del mes</div><div class="v pos">${crc(st.inc)}</div></div>
+   <div class="card"><div class="k">Gastos del mes</div><div class="v neg">${crc(st.exp)}</div></div>
+   <div class="card"><div class="k">Ahorro neto del mes</div><div class="v ${net < 0 ? 'neg' : 'pos'}">${net < 0 ? '−' : ''}${crc(Math.abs(net))}</div></div>
+   <div class="card"><div class="k">Gastos pendientes de pago</div><div class="v wrn">${crc(pendingOut())}</div></div>
+   ${debt ? `<div class="card"><div class="k">Deuda en tarjetas</div><div class="v neg">${crc(debt)}</div></div>` : ''}
+  </div>
+  <div class="grid2">
+   <div class="card"><h2>Ingresos frente a gastos</h2>${barChart(months)}</div>
+   <div class="card"><h2>Gastos por categoría</h2>${catBars(ui.month)}</div>
+  </div>
+  <div class="grid2">
+   <div class="card"><h2>Presupuestos</h2>${buds.length ? buds.map(b => budRow(b, sp[b.category] || 0)).join('') : `<div class="empty">Aún no tienes presupuestos.</div>`}</div>
+   <div class="card"><h2>Actividad reciente</h2>${recent.length ? `<table>${recent.map(t => `<tr><td>${esc(t.description || (t.type === 'transferencia' ? accName(t.account) + ' → ' + accName(t.toAccount) : cap(t.type)))}<div class="mut" style="font-size:12px">${dayLabel(t.date)}${t.status === 'pendiente' ? ' · pendiente' : ''}</div></td><td class="num ${amtCls(t)}">${amtTxt(t)}</td></tr>`).join('')}</table>` : `<div class="empty">Registra tu primer movimiento en “Movimientos”.</div>`}</div>
+  </div>${dashAgenda()}`;
+}
+
+/* ---- movimientos ---- */
+function filteredTx() {
+  const f = ui.f, q = f.q.trim().toLowerCase();
+  return live('transactions').filter(t => monthOf(t.date) === ui.month && (!f.type || t.type === f.type) && (!f.account || t.account === f.account || t.toAccount === f.account) && (!f.cat || t.category === f.cat) &&
+    (!q || ((t.description || '') + ' ' + (t.notes || '') + ' ' + (t.tags || []).join(' ')).toLowerCase().includes(q)))
+    .sort((a, b) => (b.date + b.created_at).localeCompare(a.date + a.created_at));
+}
+function vMovs() {
+  const list = filteredTx(), f = ui.f;
+  const inc = list.filter(t => t.type === 'ingreso' && t.status === 'confirmado').reduce((s, t) => s + t.amount, 0);
+  const exp = list.filter(t => t.type === 'gasto' && t.status === 'confirmado').reduce((s, t) => s + t.amount, 0);
+  return `<h1>Movimientos</h1><p class="sub">Ingresos, gastos, transferencias y ajustes de saldo.</p>${monthBar()}
+  <div class="bar">
+   <input data-f="q" placeholder="Buscar…" value="${esc(f.q)}" aria-label="Buscar" style="min-width:160px" ${f.q ? 'data-focus' : ''}>
+   <select data-f="type" aria-label="Tipo"><option value="">Todos los tipos</option>${['ingreso', 'gasto', 'transferencia', 'ajuste'].map(x => opt(x, f.type, cap(x))).join('')}</select>
+   <select data-f="account" aria-label="Cuenta"><option value="">Todas las cuentas</option>${live('accounts').map(a => opt(a.id, f.account, a.name)).join('')}</select>
+   <select data-f="cat" aria-label="Categoría"><option value="">Todas las categorías</option>${live('categories').map(c => opt(c.id, f.cat, c.name)).join('')}</select>
+   <span class="grow"></span><button class="btn pri" data-act="newtx">+ Nuevo movimiento</button>
+  </div>
+  <div class="card wrap">${list.length ? `<table><thead><tr><th>Fecha</th><th>Descripción</th><th>Cuenta</th><th>Categoría</th><th class="num">Monto</th><th></th></tr></thead><tbody>${list.map(t => `<tr>
+   <td>${dayLabel(t.date)}</td>
+   <td>${esc(t.description || cap(t.type))}${t.status === 'pendiente' ? ' <span class="badge est">pendiente</span>' : ''}${(t.tags || []).map(x => ` <span class="badge">${esc(x)}</span>`).join('')}</td>
+   <td>${t.type === 'transferencia' ? esc(accName(t.account)) + ' → ' + esc(accName(t.toAccount)) : esc(accName(t.account))}</td>
+   <td>${t.category ? esc(catName(t.category)) : '<span class="mut">' + cap(t.type) + '</span>'}</td>
+   <td class="num ${amtCls(t)}">${amtTxt(t)}</td>
+   <td class="acts"><button class="btn sm" data-act="edittx" data-id="${t.id}">Editar</button><button class="btn sm" data-act="duptx" data-id="${t.id}">Duplicar</button><button class="btn sm dng" data-act="deltx" data-id="${t.id}">Borrar</button></td></tr>`).join('')}</tbody></table>` : `<div class="empty">No hay movimientos con estos filtros.</div>`}</div>
+  <p class="mut">Confirmados en la vista: ingresos <b class="pos">${crc(inc)}</b> · gastos <b class="neg">${crc(exp)}</b></p>`;
+}
+
+let formSave = null;
+/* Diálogos propios: confirm()/alert() quedan bloqueados en algunos visores */
+let dlg2Res = null;
+function dlg2(msg, buttons) {
+  return new Promise(res => {
+    const d = $('#dlg2');
+    if (dlg2Res) { dlg2Res(false); dlg2Res = null; }
+    dlg2Res = res;
+    d.innerHTML = `<p style="margin-top:0">${esc(msg)}</p><div class="acts">${buttons}</div>`;
+    d.onclose = () => { if (dlg2Res) { const r = dlg2Res; dlg2Res = null; r(false); } };
+    d.showModal();
+    const b = d.querySelector('.pri'); if (b) b.focus();
+  });
+}
+const askConfirm = (msg, ok = 'Aceptar') => dlg2(msg, `<button type="button" class="btn" data-act="dlg2no">Cancelar</button><button type="button" class="btn pri" data-act="dlg2ok">${esc(ok)}</button>`);
+const tell = msg => dlg2(msg, `<button type="button" class="btn pri" data-act="dlg2ok">Entendido</button>`);
+const uuid = () => (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 3 | 8)).toString(16); });
+
+function openForm(title, body, onSave, onOpen) {
+  const d = $('#dlg');
+  // El guardado NO depende del envío del formulario (algunos visores lo bloquean): botón normal + Enter manual.
+  d.innerHTML = `<form id="frm" novalidate><h2>${esc(title)}</h2>${body}<div class="err" role="alert"></div><div class="acts"><button type="button" class="btn" data-act="close">Cancelar</button><button type="button" class="btn pri" data-act="save">Guardar</button></div></form>`;
+  const form = $('#frm');
+  form.onsubmit = e => e.preventDefault();
+  let busy = false;
+  formSave = async () => {
+    if (busy) return;
+    const errEl = $('.err', d);
+    errEl.textContent = '';
+    if (!form.checkValidity()) { const bad = form.querySelector(':invalid'); errEl.textContent = 'Revisa el campo: ' + ((bad.closest('label') || {}).textContent || '').trim().split('\n')[0].slice(0, 60); bad.focus(); return; }
+    busy = true;
+    try {
+      const err = await onSave(new FormData(form));
+      if (err) { errEl.textContent = err; return; }
+      d.close(); render();
+    } catch (x) { errEl.textContent = 'Error al guardar: ' + x.message; }
+    finally { busy = false; }
+  };
+  form.onkeydown = e => { if (e.key === 'Enter' && e.target.tagName === 'INPUT' && e.target.type !== 'file' && e.target.type !== 'checkbox') { e.preventDefault(); formSave(); } };
+  d.showModal();
+  if (onOpen) onOpen(d);
+}
+
+function txForm(t) {
+  const isNew = !t || !t.id; t = t || {};
+  const accs = live('accounts').filter(a => a.active !== false || a.id === t.account || a.id === t.toAccount);
+  if (!accs.length) return tell('Crea primero una cuenta.');
+  const aopts = cur => accs.map(a => opt(a.id, cur, a.name)).join('');
+  openForm(isNew ? 'Nuevo movimiento' : 'Editar movimiento', `
+   <label>Tipo<select name="type">${['gasto', 'ingreso', 'transferencia', 'ajuste'].map(x => opt(x, t.type || 'gasto', cap(x))).join('')}</select></label>
+   <label>Descripción<input name="description" value="${esc(t.description)}" autocomplete="off"></label>
+   <label>Monto (₡)<input name="amount" type="number" step="1" required value="${t.amount ?? ''}" inputmode="numeric"></label>
+   <label>Fecha<input name="date" type="date" required value="${t.date || (monthOf(today()) === ui.month ? today() : ui.month + '-01')}"></label>
+   <label><span data-lbl>Cuenta</span><select name="account">${aopts(t.account)}</select></label>
+   <label data-for="transferencia">Cuenta destino<select name="toAccount">${aopts(t.toAccount)}</select></label>
+   <label data-for="gasto ingreso">Categoría<select name="category"></select></label>
+   <label>Estado<select name="status">${opt('confirmado', t.status || 'confirmado', 'Confirmado')}${opt('pendiente', t.status, 'Pendiente (no afecta saldos)')}</select></label>
+   <label>Etiquetas (separadas por coma)<input name="tags" value="${esc((t.tags || []).join(', '))}"></label>
+   <label>Notas<textarea name="notes" rows="2">${esc(t.notes)}</textarea></label>`,
+  fd => {
+    const type = fd.get('type'), amount = Math.round(Number(fd.get('amount')));
+    if (!Number.isFinite(amount)) return 'Monto inválido.';
+    if (type !== 'ajuste' && amount <= 0) return 'El monto debe ser mayor que cero.';
+    if (type === 'ajuste' && amount === 0) return 'El ajuste no puede ser cero.';
+    if (type !== 'transferencia' && !(fd.get('description') || '').trim()) return 'Escribe una descripción.';
+    if (type === 'transferencia' && fd.get('account') === fd.get('toAccount')) return 'La cuenta origen y destino deben ser distintas.';
+    const obj = Object.assign({}, t, {
+      type, description: (fd.get('description') || '').trim(), amount, currency: 'CRC', date: fd.get('date'), account: fd.get('account'),
+      toAccount: type === 'transferencia' ? fd.get('toAccount') : null,
+      category: (type === 'gasto' || type === 'ingreso') ? (fd.get('category') || null) : null,
+      status: fd.get('status'), tags: (fd.get('tags') || '').split(',').map(x => x.trim()).filter(Boolean), notes: (fd.get('notes') || '').trim()
+    });
+    return save('transactions', obj).then(() => { ui.month = monthOf(obj.date); }).then(() => null);
+  },
+  d => {
+    const sel = () => {
+      const type = d.querySelector('[name=type]').value;
+      d.querySelectorAll('[data-for]').forEach(l => l.style.display = l.dataset.for.split(' ').includes(type) ? '' : 'none');
+      d.querySelector('[data-lbl]').textContent = type === 'transferencia' ? 'Cuenta origen' : 'Cuenta';
+      const cs = live('categories').filter(c => c.type === type && (c.active !== false || c.id === t.category));
+      const cat = d.querySelector('[name=category]'); const prev = cat.value || t.category;
+      cat.innerHTML = '<option value="">Sin categoría</option>' + cs.map(c => opt(c.id, prev, c.name)).join('');
+    };
+    d.querySelector('[name=type]').onchange = sel; sel();
+  });
+}
+
+/* ---- cuentas ---- */
+const ACC_TYPES = ['banco', 'efectivo', 'ahorro', 'tarjeta de débito', 'tarjeta de crédito', 'otra'];
+function vAccounts() {
+  const accs = live('accounts');
+  return `<h1>Cuentas</h1><p class="sub">Las transferencias entre tus cuentas no cuentan como ingreso ni gasto. Las tarjetas de crédito se muestran como deuda y no suman al disponible.</p>
+  <div class="bar"><span class="grow"></span><button class="btn pri" data-act="newacc">+ Nueva cuenta</button></div>
+  <div class="grid">${accs.map(a => { const b = balance(a.id); return `<div class="card" style="${a.active === false ? 'opacity:.55' : ''}"><div class="row"><strong>${esc(a.name)}</strong><span class="badge">${esc(a.type)}${a.active === false ? ' · inactiva' : ''}</span></div><div class="mut" style="font-size:12px">${esc(a.institution || '')}&nbsp;</div><div class="v ${b < 0 ? 'neg' : ''}">${crc(b)}</div><div class="acts" style="margin-top:8px"><button class="btn sm" data-act="editacc" data-id="${a.id}">Editar</button><button class="btn sm dng" data-act="delacc" data-id="${a.id}">Borrar</button></div></div>`; }).join('')}</div>`;
+}
+function accForm(a) {
+  a = a || {};
+  openForm(a.id ? 'Editar cuenta' : 'Nueva cuenta', `
+   <label>Nombre<input name="name" required value="${esc(a.name)}"></label>
+   <label>Institución<input name="institution" value="${esc(a.institution)}"></label>
+   <label>Tipo<select name="type">${ACC_TYPES.map(x => opt(x, a.type || 'banco', cap(x))).join('')}</select></label>
+   <label>Saldo inicial (₡)<input name="initial" type="number" step="1" value="${a.initial ?? 0}"></label>
+   <label><input type="checkbox" name="active" style="width:auto" ${a.active !== false ? 'checked' : ''}> Cuenta activa</label>`,
+  fd => {
+    const name = (fd.get('name') || '').trim(); if (!name) return 'Escribe un nombre.';
+    return save('accounts', Object.assign({}, a, { name, institution: (fd.get('institution') || '').trim(), type: fd.get('type'), initial: Math.round(Number(fd.get('initial')) || 0), active: fd.get('active') === 'on', currency: 'CRC' })).then(() => null);
+  });
+}
+
+/* ---- presupuestos ---- */
+function budRow(b, spent) {
+  const p = b.limit ? spent / b.limit * 100 : 0, left = b.limit - spent;
+  const cls = p >= 90 ? 'b' : p >= 75 ? 'w' : '';
+  const lvl = p >= 100 ? 'Límite superado' : p >= 90 ? 'Alerta 90 %' : p >= 75 ? 'Alerta 75 %' : p >= 50 ? 'Alerta 50 %' : '';
+  return `<div style="margin-bottom:12px"><div class="row"><strong>${esc(catName(b.category))}</strong><span class="mut">${crc(spent)} de ${crc(b.limit)}</span></div><div class="prog ${cls}"><i style="width:${Math.min(100, p)}%"></i></div><div class="row mut" style="font-size:12px"><span>${Math.round(p)} % usado${lvl ? ' · <b class="' + (p >= 90 ? 'neg' : 'wrn') + '">' + lvl + '</b>' : ''}</span><span>${left >= 0 ? 'Quedan ' + crc(left) : 'Excedido por ' + crc(-left)}</span></div></div>`;
+}
+function vBudgets() {
+  const sp = spentByCat(ui.month), buds = live('budgets');
+  const budgeted = new Set(buds.map(b => b.category));
+  const unb = Object.entries(sp).filter(([k]) => !budgeted.has(k)).reduce((s, [, v]) => s + v, 0);
+  return `<h1>Presupuestos</h1><p class="sub">Límites mensuales por categoría de gasto. Alertas en 50 %, 75 %, 90 % y 100 %.</p>${monthBar()}
+  <div class="bar"><span class="grow"></span><button class="btn pri" data-act="newbud">+ Nuevo presupuesto</button></div>
+  <div class="card">${buds.length ? buds.map(b => `<div class="row" style="align-items:flex-start"><div style="flex:1">${budRow(b, sp[b.category] || 0)}</div><div class="acts"><button class="btn sm" data-act="editbud" data-id="${b.id}">Editar</button><button class="btn sm dng" data-act="delbud" data-id="${b.id}">Borrar</button></div></div>`).join('') : `<div class="empty">Define un límite por categoría para controlar tus gastos.</div>`}</div>
+  <p class="mut">Gasto del mes sin presupuesto asignado: <b>${crc(unb)}</b></p>`;
+}
+function budForm(b) {
+  b = b || {};
+  const cats = live('categories').filter(c => c.type === 'gasto' && (c.active !== false || c.id === b.category));
+  openForm(b.id ? 'Editar presupuesto' : 'Nuevo presupuesto', `
+   <label>Categoría<select name="category">${cats.map(c => opt(c.id, b.category, c.name)).join('')}</select></label>
+   <label>Límite mensual (₡)<input name="limit" type="number" step="1" min="1" required value="${b.limit ?? ''}"></label>`,
+  fd => {
+    const limit = Math.round(Number(fd.get('limit'))), category = fd.get('category');
+    if (!(limit > 0)) return 'El límite debe ser mayor que cero.';
+    if (live('budgets').some(x => x.category === category && x.id !== b.id)) return 'Esa categoría ya tiene presupuesto.';
+    return save('budgets', Object.assign({}, b, { category, limit, period: 'mensual' })).then(() => null);
+  });
+}
+
+/* ---- planificación sin salario ---- */
+function planCalc() {
+  const p = CFG.plan, t0 = today();
+  const start = p.startBalance !== '' && p.startBalance != null ? Number(p.startBalance) : disponible();
+  const monthlyEss = p.essentials.reduce((a, e) => a + e.monthly, 0);
+  const daily = monthlyEss * 12 / 365, reserve = Number(p.reserve) || 0;
+  const extrasUpTo = d => p.extras.filter(e => { const o = daysBetween(t0, e.date); return o >= 0 && o <= d; }).reduce((a, e) => a + e.amount, 0);
+  const scenario = hire => {
+    const days = Math.max(0, daysBetween(t0, hire)) + (Number(p.payLag) || 0);
+    const extras = extrasUpTo(days), end = start - daily * days - extras;
+    const maxWeekly = days > 0 ? (start - reserve - extras) / (days / 7) : null;
+    return { days, extras, end, maxWeekly, status: end >= reserve ? 'ok' : end >= 0 ? 'warn' : 'bad' };
+  };
+  let runway = null;
+  if (daily > 0 || p.extras.length) for (let d = 0; d <= 1825; d++) { if (start - daily * d - extrasUpTo(d) < 0) { runway = d; break; } }
+  return { start, monthlyEss, weeklyEss: monthlyEss * 12 / 52, daily, reserve, scenario, runway };
+}
+function vPlan() {
+  const p = CFG.plan, c = planCalc(), main = c.scenario(p.hireDate);
+  const stTxt = { ok: ['pos', '✔ Alcanza con reserva'], warn: ['wrn', '▲ Alcanza justo (por debajo de tu reserva)'], bad: ['neg', '✖ No alcanza'] };
+  const offsets = [15, 30, 60, 90, 120];
+  return `<h1>Planificación sin salario</h1><p class="sub">Cuánto tiempo aguanta tu dinero mientras no tienes ingresos laborales. <span class="badge est">Estimación</span> — no modifica tus saldos reales.</p>
+  <div class="grid2">
+   <div class="card"><h2>Supuestos</h2>
+    <label>Saldo inicial a considerar (₡) — vacío = tu disponible actual (${crc(disponible())})<input data-p="startBalance" type="number" step="1" value="${esc(p.startBalance)}"></label>
+    <label>Fecha estimada de inicio laboral<input data-p="hireDate" type="date" value="${esc(p.hireDate)}"></label>
+    <label>Días entre el inicio y el primer pago<input data-p="payLag" type="number" step="1" min="0" value="${esc(p.payLag)}"></label>
+    <label>Reserva mínima que quieres conservar (₡)<input data-p="reserve" type="number" step="1" min="0" value="${esc(p.reserve)}"></label>
+   </div>
+   <div class="card"><h2>Gastos esenciales mensuales</h2>
+    ${p.essentials.length ? `<table>${p.essentials.map((e, i) => `<tr><td>${esc(e.name)}</td><td class="num">${crc(e.monthly)}</td><td class="acts"><button class="btn sm dng" data-act="deless" data-i="${i}" aria-label="Quitar ${esc(e.name)}">✕</button></td></tr>`).join('')}</table>` : `<div class="empty">Agrega tus gastos esenciales (transporte, comida, servicios…).</div>`}
+    <div class="row" style="margin-top:8px"><span class="mut">Total mensual: <b>${crc(c.monthlyEss)}</b> · semanal: <b>${crc(c.weeklyEss)}</b></span><button class="btn sm" data-act="addess">+ Agregar</button></div>
+   </div>
+  </div>
+  <div class="card" style="margin-bottom:16px"><h2>Gastos extraordinarios previstos</h2>
+    ${p.extras.length ? `<table>${p.extras.map((e, i) => `<tr><td>${esc(e.name)}</td><td>${dayLabel(e.date)}</td><td class="num">${crc(e.amount)}</td><td class="acts"><button class="btn sm dng" data-act="delext" data-i="${i}" aria-label="Quitar ${esc(e.name)}">✕</button></td></tr>`).join('')}</table>` : `<div class="empty">Sin gastos extraordinarios.</div>`}
+    <div style="text-align:right;margin-top:8px"><button class="btn sm" data-act="addext">+ Agregar</button></div>
+  </div>
+  <div class="grid">
+   <div class="card"><div class="k">Saldo inicial usado</div><div class="v">${crc(c.start)}</div></div>
+   <div class="card"><div class="k">Tu dinero dura aprox.</div><div class="v">${c.runway == null ? (c.daily > 0 ? 'Más de 5 años' : '—') : Math.floor(c.runway / 7) + ' sem · ' + c.runway + ' días'}</div></div>
+   <div class="card"><div class="k">Con tu fecha elegida, al primer pago te quedan</div><div class="v ${stTxt[main.status][0]}">${crc(main.end)}</div><div class="${stTxt[main.status][0]}" style="font-size:13px">${stTxt[main.status][1]}</div></div>
+   <div class="card"><div class="k">Máximo semanal gastable hasta el primer pago</div><div class="v">${main.maxWeekly == null ? '—' : crc(Math.max(0, main.maxWeekly))}</div><div class="mut" style="font-size:12px">Tus esenciales: ${crc(c.weeklyEss)} / semana</div></div>
+  </div>
+  <div class="card wrap"><h2>Comparar fechas de contratación</h2>
+   <table><thead><tr><th>Empiezas en</th><th>Fecha</th><th class="num">Gasto estimado hasta cobrar</th><th class="num">Te quedaría</th><th>Resultado</th></tr></thead><tbody>
+   ${offsets.map(o => { const d = addDays(today(), o), s = c.scenario(d); return `<tr><td>${o} días</td><td>${dayLabel(d)}</td><td class="num">${crc(c.daily * s.days + s.extras)}</td><td class="num ${stTxt[s.status][0]}">${crc(s.end)}</td><td class="${stTxt[s.status][0]}">${stTxt[s.status][1]}</td></tr>`; }).join('')}
+   </tbody></table>
+   <p class="note">Incluye ${Number(p.payLag) || 0} días entre el inicio y el primer pago, y los gastos extraordinarios que caen antes de cobrar. Es una proyección con supuestos tuyos, no un movimiento real.</p></div>`;
+}
+function simpleForm(title, withDate, cb) {
+  openForm(title, `<label>Nombre<input name="name" required></label><label>Monto (₡)<input name="amount" type="number" min="1" step="1" required></label>${withDate ? `<label>Fecha<input name="date" type="date" required value="${today()}"></label>` : ''}`,
+    fd => { const name = (fd.get('name') || '').trim(), amount = Math.round(Number(fd.get('amount'))); if (!name || !(amount > 0)) return 'Completa nombre y un monto mayor que cero.'; return cb(name, amount, fd.get('date')); });
+}
+const savePlan = () => save('settings', CFG);
+
+/* ---- configuración ---- */
+function vConfig() {
+  const cats = live('categories');
+  const block = t => cats.filter(c => c.type === t).map(c => `<span class="badge" style="margin:2px;${c.active === false ? 'opacity:.5' : ''}">${esc(c.name)} <button class="btn sm" style="padding:0 5px;margin-left:4px" data-act="togcat" data-id="${c.id}" title="${c.active === false ? 'Activar' : 'Desactivar'}">${c.active === false ? '＋' : '✕'}</button></span>`).join('');
+  return `<h1>Configuración</h1><p class="sub">Tus datos viven solo en este navegador. Haz respaldos con frecuencia.</p>
+  <div class="grid2">
+   <div class="card"><h2>Respaldo</h2>
+    <p class="mut">Descarga todo (cuentas, movimientos, categorías, presupuestos y plan) en un archivo y guárdalo en un lugar seguro.</p>
+    <div class="bar"><button class="btn pri" data-act="expjson">Descargar respaldo (JSON)</button><button class="btn" data-act="expcsv">Movimientos (CSV)</button></div>
+    <label>Restaurar desde un respaldo (reemplaza todo lo actual)<input type="file" accept="application/json" data-act="impjson"></label>
+   </div>
+   <div class="card"><h2>Categorías</h2>
+    <div class="k">Gastos</div>${block('gasto')}<div class="k" style="margin-top:8px">Ingresos</div>${block('ingreso')}
+    <div class="bar" style="margin-top:10px"><button class="btn sm" data-act="newcat">+ Nueva categoría</button></div>
+   </div>
+  </div>
+  <div class="card"><h2>Zona de peligro</h2><p class="mut">Borra todos los datos de este navegador. No se puede deshacer.</p><button class="btn dng" data-act="wipe">Borrar todos los datos</button></div>`;
+}
+function download(name, text, type) {
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+function exportCSV() {
+  const q = v => '"' + String(v ?? '').replace(/"/g, '""') + '"';
+  const rows = [['fecha', 'tipo', 'descripcion', 'monto_crc', 'cuenta', 'cuenta_destino', 'categoria', 'estado', 'etiquetas', 'notas']];
+  live('transactions').slice().sort((a, b) => a.date.localeCompare(b.date)).forEach(t => rows.push([t.date, t.type, t.description, t.amount, accName(t.account), t.toAccount ? accName(t.toAccount) : '', t.category ? catName(t.category) : '', t.status, (t.tags || []).join(';'), t.notes]));
+  download('nexus-movimientos.csv', '\ufeff' + rows.map(r => r.map(q).join(',')).join('\n'), 'text/csv');
+}
+async function importJSON(file) {
+  try {
+    const j = JSON.parse(await file.text());
+    if (j.app !== 'nexus' || !j.data) return tell('El archivo no es un respaldo de NEXUS.');
+    if (!(await askConfirm('Esto reemplaza todos los datos actuales por los del respaldo. ¿Continuar?', 'Restaurar'))) return;
+    for (const n of STORES) { await reqP(store(n, 'readwrite').clear()); for (const o of (j.data[n] || [])) { await reviveBlob(o); await reqP(store(n, 'readwrite').put(o)); } S[n] = await reqP(store(n).getAll()); }
+    CFG = S.settings.find(x => x.id === 'main') || await save('settings', { id: 'main', plan: {} });
+    normCfg();
+    render(); tell('Respaldo restaurado.');
+  } catch (e) { tell('No se pudo leer el respaldo: ' + e.message); }
+}
+
+/* ======================================================================
+   MÓDULOS ADICIONALES: calendario, tareas, objetivos, independencia,
+   empleo, educación, reportes y documentos
+   ====================================================================== */
+const PRIO = ['baja', 'media', 'alta'];
+const T_EST = ['pendiente', 'en progreso', 'en espera', 'completada', 'cancelada'];
+const EV_TYPES = ['personal', 'laboral', 'académico', 'financiero', 'médico', 'familiar', 'otros'];
+const REPEAT = ['ninguna', 'diaria', 'semanal', 'mensual', 'anual'];
+const JOB_EST = ['encontrada', 'postulación enviada', 'en revisión', 'entrevista', 'segunda entrevista', 'oferta recibida', 'aceptada', 'rechazada', 'descartada'];
+const FINAL_JOB = ['aceptada', 'rechazada', 'descartada'];
+const JOB_INT = ['entrevista', 'segunda entrevista', 'oferta recibida', 'aceptada'];
+const DOC_T = ['contrato', 'comprobante', 'recibo', 'documento académico', 'documento laboral', 'garantía', 'presupuesto', 'otro'];
+const KIND = {
+  evento: ['●', 'Evento', '#38BDF8'], tarea: ['☑', 'Tarea', '#2DD4BF'], pago: ['₡', 'Pago o cobro pendiente', '#fb923c'],
+  empleo: ['✉', 'Empleo', '#a78bfa'], doc: ['▤', 'Documento', '#f472b6'], edu: ['✎', 'Educación', '#60a5fa'],
+  meta: ['⚑', 'Objetivo', '#c084fc'], mudanza: ['⌂', 'Mudanza', '#e879f9']
+};
+const WD = ['lun', 'mar', 'mié', 'jue', 'vie', 'sáb', 'dom'];
+
+Object.assign(ui, {
+  cal: { mode: 'mes', date: today() },
+  uf: { tasks: { q: '', estado: 'activas', prio: '', proj: '' }, jobs: { q: '', estado: '' }, docs: { q: '', type: '' } },
+  ind: 'mudanza',
+  rep: { mode: 'mes', date: today(), from: addDays(today(), -30), to: today() }
+});
+
+function normCfg() {
+  CFG.plan = Object.assign({ startBalance: '', hireDate: addDays(today(), 30), payLag: 15, reserve: 0, essentials: [], extras: [] }, CFG.plan);
+  const d = {
+    move: { destino: '', fecha: '', transporte: 0, mudanza: 0, deposito: 0, alquiler1: 0, mobiliario: 0, instalacion: 0 },
+    housing: { alquiler: 0, electricidad: 0, agua: 0, internet: 0, alimentacion: 0, transporte: 0, limpieza: 0, higiene: 0, mantenimiento: 0 },
+    sim: { bruto: '', deduc: 10.67, neto: '', uni: 0, emerg: 3, ahorroPct: 20, ahorros: '' }
+  };
+  const c = CFG.indep || {};
+  CFG.indep = { move: Object.assign({}, d.move, c.move), housing: Object.assign({}, d.housing, c.housing), items: c.items || [], sim: Object.assign({}, d.sim, c.sim) };
+}
+function setPath(o, path, v) { const k = path.split('.'); const last = k.pop(); for (const x of k) o = o[x]; o[last] = v; }
+const whenTxt = n => n < 0 ? 'hace ' + (-n) + ' d' : n === 0 ? 'hoy' : n === 1 ? 'mañana' : 'en ' + n + ' días';
+const mondayOf = s => { const d = new Date(s + 'T00:00:00'); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return ymd(d); };
+const lastDayOf = m => ymd(new Date(Number(m.slice(0, 4)), Number(m.slice(5, 7)), 0));
+const selHtml = (sf, options, cur) => `<select data-sf="${sf}" aria-label="Estado" style="width:auto">${options.map(o => opt(o, cur, cap(o))).join('')}</select>`;
+
+/* ---------- formularios genéricos ---------- */
+function fieldHtml(f, v) {
+  const val = v ?? f.d ?? '';
+  const req = f.req ? ' required' : '';
+  if (f.t === 'select') {
+    const os = typeof f.o === 'function' ? f.o() : f.o;
+    return `<label>${f.l}<select name="${f.n}">${f.blank != null ? opt('', val, f.blank) : ''}${os.map(o => { const [ov, ol] = Array.isArray(o) ? o : [o, cap(o)]; return opt(ov, val, ol); }).join('')}</select></label>`;
+  }
+  if (f.t === 'textarea') return `<label>${f.l}<textarea name="${f.n}" rows="2">${esc(val)}</textarea></label>`;
+  if (f.t === 'tags') return `<label>${f.l}<input name="${f.n}" value="${esc(Array.isArray(val) ? val.join(', ') : val)}"></label>`;
+  if (f.t === 'number') return `<label>${f.l}<input name="${f.n}" type="number" step="1"${f.min != null ? ' min="' + f.min + '"' : ''} value="${esc(val)}" inputmode="numeric"${req}></label>`;
+  return `<label>${f.l}<input name="${f.n}" type="${f.t || 'text'}" value="${esc(val)}"${req}></label>`;
+}
+function crud(storeName, title, fields, rec, opts = {}) {
+  rec = rec || {};
+  const isNew = !rec.id;
+  const del = !isNew && opts.delAct ? `<div style="margin-bottom:10px"><button type="button" class="btn sm dng" data-act="${opts.delAct}" data-id="${rec.id}">Borrar este registro</button></div>` : '';
+  openForm((isNew ? 'Nuevo: ' : 'Editar: ') + title, fields.map(f => fieldHtml(f, rec[f.n])).join('') + del, fd => {
+    const o = Object.assign({}, rec);
+    for (const f of fields) {
+      let v = fd.get(f.n);
+      if (f.t === 'number') {
+        v = v === '' || v == null ? null : Math.round(Number(v));
+        if (v !== null && !Number.isFinite(v)) return 'Número inválido: ' + f.l;
+        if (v !== null && f.min != null && v < f.min) return f.l + ' no puede ser menor que ' + f.min + '.';
+      } else if (f.t === 'tags') v = (v || '').split(',').map(x => x.trim()).filter(Boolean);
+      else v = (v || '').trim();
+      if (f.req && (v === '' || v == null)) return 'Completa: ' + f.l;
+      o[f.n] = v;
+    }
+    if (opts.post) { const e = opts.post(o); if (e) return e; }
+    return save(storeName, o).then(() => null);
+  });
+}
+async function delRec(st, id, msg) {
+  if (!(await askConfirm(msg, 'Borrar'))) return;
+  await removeRec(st, id);
+  const d = $('#dlg'); if (d.open) d.close();
+  render();
+}
+const DELMAP = {
+  deltask: ['tasks', '¿Borrar esta tarea?'], delev: ['events', '¿Borrar este evento?'], delproj: ['projects', '¿Borrar este objetivo o proyecto?'],
+  deljob: ['jobs', '¿Borrar esta postulación?'], deledu: ['edu', '¿Borrar este registro?'], deldoc: ['docs', '¿Borrar este documento y su archivo?']
+};
+
+/* ---------- calendario ---------- */
+function occursOn(ev, d) {
+  if (!ev.date || d < ev.date) return false;
+  if (ev.until && d > ev.until) return false;
+  switch (ev.repeat) {
+    case 'diaria': return true;
+    case 'semanal': return daysBetween(ev.date, d) % 7 === 0;
+    case 'mensual': return d.slice(8) === ev.date.slice(8);
+    case 'anual': return d.slice(5) === ev.date.slice(5);
+    default: return d === ev.date;
+  }
+}
+function calItems(d) {
+  const r = [];
+  live('events').forEach(e => { if (occursOn(e, d)) r.push({ k: 'evento', t: e.title, time: e.time || '', id: e.id, ed: 'editev', sub: cap(e.type || 'evento') + (e.prio === 'alta' ? ' · prioridad alta' : '') + (e.repeat && e.repeat !== 'ninguna' ? ' · se repite (' + e.repeat + ')' : '') }); });
+  live('tasks').forEach(t => { if (t.due === d && !['completada', 'cancelada'].includes(t.estado)) r.push({ k: 'tarea', t: t.name, time: '', id: t.id, ed: 'edittask', sub: 'Tarea · ' + t.estado }); });
+  live('transactions').forEach(t => { if (t.status === 'pendiente' && t.date === d && (t.type === 'gasto' || t.type === 'ingreso')) r.push({ k: 'pago', t: (t.type === 'gasto' ? 'Pagar: ' : 'Cobrar: ') + (t.description || '') + ' ' + crc(t.amount), time: '', id: t.id, ed: 'edittx', sub: 'Movimiento pendiente' }); });
+  live('jobs').forEach(j => { if (j.nextDate === d && !FINAL_JOB.includes(j.estado)) r.push({ k: 'empleo', t: j.empresa + ': ' + (j.nextAction || 'próxima acción'), time: '', id: j.id, ed: 'editjob', sub: 'Empleo · ' + j.estado }); });
+  live('docs').forEach(x => { if (x.venc === d) r.push({ k: 'doc', t: 'Vence: ' + x.name, time: '', id: x.id, ed: 'editdoc', sub: 'Documento · ' + x.type }); });
+  live('edu').forEach(x => { if (x.kind === 'fecha' && x.date === d) r.push({ k: 'edu', t: x.title, time: '', id: x.id, ed: 'editedu', sub: 'Educación · ' + (x.tipo || '') }); });
+  live('projects').forEach(p => { if (p.target === d && p.estado === 'activo') r.push({ k: 'meta', t: 'Meta: ' + p.name, time: '', id: p.id, ed: 'editproj', sub: 'Objetivo' }); });
+  const mv = CFG.indep && CFG.indep.move;
+  if (mv && mv.fecha === d) r.push({ k: 'mudanza', t: 'Mudanza' + (mv.destino ? ' a ' + mv.destino : ''), time: '', id: '', ed: 'gotoind', sub: 'Independencia', data: 'data-t="mudanza"' });
+  return r.sort((a, b) => (a.time || '99').localeCompare(b.time || '99'));
+}
+const itemBtn = it => `<button class="citem" style="border-left-color:${KIND[it.k][2]}" data-act="${it.ed}" ${it.id ? 'data-id="' + it.id + '"' : ''} ${it.data || ''}><b class="ico" aria-hidden="true">${KIND[it.k][0]}</b> ${it.time ? esc(it.time) + ' · ' : ''}${esc(it.t)}<div class="mut" style="font-size:12px">${esc(it.sub || KIND[it.k][1])}</div></button>`;
+
+function alerts() {
+  const t0 = today(), r = [];
+  live('tasks').forEach(t => {
+    if (!t.due || ['completada', 'cancelada'].includes(t.estado)) return;
+    const n = daysBetween(t0, t.due);
+    if (n < 0) r.push({ lvl: 'bad', t: 'Tarea vencida: ' + t.name, n });
+    else if (t.remind != null && t.remind !== '' && n <= t.remind) r.push({ lvl: 'warn', t: 'Tarea: ' + t.name, n });
+  });
+  live('events').forEach(e => {
+    if (e.remind == null || e.remind === '') return;
+    for (let k = 0; k <= e.remind; k++) if (occursOn(e, addDays(t0, k))) { r.push({ lvl: 'warn', t: 'Evento: ' + e.title, n: k }); break; }
+  });
+  live('docs').forEach(x => {
+    if (!x.venc) return;
+    const n = daysBetween(t0, x.venc);
+    if (n < 0) r.push({ lvl: 'bad', t: 'Documento vencido: ' + x.name, n }); else if (n <= 30) r.push({ lvl: 'warn', t: 'Documento por vencer: ' + x.name, n });
+  });
+  live('transactions').forEach(x => {
+    if (x.status !== 'pendiente' || x.type !== 'gasto') return;
+    const n = daysBetween(t0, x.date);
+    if (n < 0) r.push({ lvl: 'bad', t: 'Pago atrasado: ' + (x.description || 'gasto') + ' ' + crc(x.amount), n }); else if (n <= 7) r.push({ lvl: 'warn', t: 'Pago próximo: ' + (x.description || 'gasto') + ' ' + crc(x.amount), n });
+  });
+  live('jobs').forEach(j => {
+    if (!j.nextDate || FINAL_JOB.includes(j.estado)) return;
+    const n = daysBetween(t0, j.nextDate);
+    if (n < 0) r.push({ lvl: 'bad', t: 'Empleo, acción atrasada: ' + j.empresa, n }); else if (n <= 3) r.push({ lvl: 'warn', t: 'Empleo: ' + j.empresa + ' · ' + (j.nextAction || 'próxima acción'), n });
+  });
+  return r.sort((a, b) => a.n - b.n);
+}
+function dashAgenda() {
+  const al = alerts().slice(0, 8), t0 = today();
+  let up = '';
+  for (let i = 0; i <= 7; i++) {
+    const d = addDays(t0, i), its = calItems(d);
+    if (its.length) up += `<div style="margin-bottom:6px"><div class="k">${i === 0 ? 'Hoy' : i === 1 ? 'Mañana' : dayLabel(d)}</div>${its.map(it => `<div><span class="ico" style="color:${KIND[it.k][2]}" aria-hidden="true">${KIND[it.k][0]}</span> ${esc(it.t)} ${it.time ? '<span class="mut">' + esc(it.time) + '</span>' : ''}</div>`).join('')}</div>`;
+  }
+  const pend = live('tasks').filter(t => !['completada', 'cancelada'].includes(t.estado)).length;
+  return `<div class="grid2">
+   <div class="card"><h2>Alertas</h2>${al.length ? al.map(a => `<div class="row" style="margin-bottom:4px"><span class="${a.lvl === 'bad' ? 'neg' : 'wrn'}"><b aria-hidden="true">${a.lvl === 'bad' ? '✖' : '▲'}</b> ${esc(a.t)}</span><span class="mut">${whenTxt(a.n)}</span></div>`).join('') : '<div class="empty">Sin alertas. Todo al día.</div>'}</div>
+   <div class="card"><div class="row"><h2>Próximos 7 días</h2><span class="mut">${pend} tareas pendientes</span></div>${up || '<div class="empty">No hay nada programado esta semana.</div>'}</div>
+  </div>`;
+}
+
+const evFields = () => [
+  { n: 'title', l: 'Título', req: true }, { n: 'date', l: 'Fecha', t: 'date', req: true }, { n: 'time', l: 'Hora', t: 'time' },
+  { n: 'type', l: 'Tipo', t: 'select', o: EV_TYPES, d: 'personal' }, { n: 'repeat', l: 'Repetición', t: 'select', o: REPEAT, d: 'ninguna' },
+  { n: 'until', l: 'Repetir hasta (opcional)', t: 'date' }, { n: 'prio', l: 'Prioridad', t: 'select', o: PRIO, d: 'media' },
+  { n: 'remind', l: 'Avisarme con cuántos días de anticipación (vacío = sin aviso)', t: 'number', min: 0 },
+  { n: 'desc', l: 'Descripción', t: 'textarea' }
+];
+
+function vCalendar() {
+  const c = ui.cal, d = c.date;
+  let title = '', body = '';
+  const dayBlock = x => { const its = calItems(x); return its.length ? its.map(itemBtn).join('') : '<div class="mut" style="font-size:13px">Sin actividades</div>'; };
+  if (c.mode === 'mes') {
+    const m = monthOf(d), start = mondayOf(m + '-01'), cells = [];
+    title = cap(monthLabel(m));
+    for (let i = 0; i < 42; i++) cells.push(addDays(start, i));
+    body = `<div class="calgrid">${WD.map(w => `<div class="calh">${w}</div>`).join('')}${cells.map(x => {
+      const its = calItems(x);
+      return `<div class="calcell${monthOf(x) !== m ? ' out' : ''}${x === today() ? ' tod' : ''}" data-act="calday" data-d="${x}" role="button" tabindex="0" aria-label="${dayLabel(x)}, ${its.length} actividades"><div class="dn">${Number(x.slice(8))}</div>${its.slice(0, 3).map(it => `<div class="chip" style="border-left-color:${KIND[it.k][2]}">${KIND[it.k][0]} ${esc(it.t)}</div>`).join('')}${its.length > 3 ? `<div class="mut" style="font-size:11px">+${its.length - 3} más</div>` : ''}${its.length ? `<span class="cnt">● ${its.length}</span>` : ''}</div>`;
+    }).join('')}</div>`;
+  } else if (c.mode === 'semana') {
+    const a = mondayOf(d);
+    title = dayLabel(a) + ' – ' + dayLabel(addDays(a, 6));
+    body = `<div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(210px,1fr))">${[0, 1, 2, 3, 4, 5, 6].map(i => { const x = addDays(a, i); return `<div class="card"><div class="row"><strong>${cap(WD[i])} ${Number(x.slice(8))}${x === today() ? ' · hoy' : ''}</strong><button class="btn sm" data-act="newev" data-d="${x}" aria-label="Nuevo evento el ${dayLabel(x)}">+</button></div>${dayBlock(x)}</div>`; }).join('')}</div>`;
+  } else if (c.mode === 'dia') {
+    title = cap(new Date(d + 'T00:00:00').toLocaleDateString('es-CR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }));
+    body = `<div class="card"><div class="row" style="margin-bottom:8px"><span class="mut">${dayLabel(d)}</span><button class="btn sm" data-act="newev" data-d="${d}">+ Evento</button></div>${dayBlock(d)}</div>`;
+  } else {
+    title = 'Agenda desde ' + dayLabel(d);
+    let h = '';
+    for (let i = 0; i < 30; i++) { const x = addDays(d, i), its = calItems(x); if (its.length) h += `<div class="card" style="margin-bottom:8px"><strong>${cap(new Date(x + 'T00:00:00').toLocaleDateString('es-CR', { weekday: 'long', day: 'numeric', month: 'long' }))}</strong><div style="margin-top:6px">${its.map(itemBtn).join('')}</div></div>`; }
+    body = h || '<div class="card empty">No hay actividades en los próximos 30 días.</div>';
+  }
+  const modes = [['mes', 'Mensual'], ['semana', 'Semanal'], ['dia', 'Diaria'], ['agenda', 'Agenda']];
+  return `<h1>Calendario</h1><p class="sub">Eventos, tareas, pagos pendientes, empleo, documentos y fechas académicas en un solo lugar.</p>
+  <div class="bar noprint"><div class="tabs" style="margin:0">${modes.map(([k, l]) => `<button class="tab" data-act="calmode" data-m="${k}" aria-pressed="${c.mode === k}">${l}</button>`).join('')}</div><span class="grow"></span>
+   <button class="btn sm" data-act="calnav" data-k="-1" aria-label="Anterior">‹</button><strong style="min-width:170px;text-align:center">${esc(title)}</strong><button class="btn sm" data-act="calnav" data-k="1" aria-label="Siguiente">›</button><button class="btn sm" data-act="caltoday">Hoy</button>
+   <button class="btn pri" data-act="newev" data-d="${c.mode === 'mes' ? today() : d}">+ Nuevo evento</button></div>
+  ${body}
+  <div class="leg" style="flex-wrap:wrap">${Object.values(KIND).map(k => `<span><b style="color:${k[2]}">${k[0]}</b> ${k[1]}</span>`).join('')}</div>`;
+}
+
+/* ---------- tareas ---------- */
+const taskFields = () => [
+  { n: 'name', l: 'Nombre', req: true }, { n: 'desc', l: 'Descripción', t: 'textarea' }, { n: 'due', l: 'Fecha límite', t: 'date' },
+  { n: 'prio', l: 'Prioridad', t: 'select', o: PRIO, d: 'media' }, { n: 'estado', l: 'Estado', t: 'select', o: T_EST, d: 'pendiente' },
+  { n: 'cat', l: 'Categoría' }, { n: 'project', l: 'Proyecto relacionado', t: 'select', blank: 'Sin proyecto', o: () => live('projects').map(p => [p.id, p.name]) },
+  { n: 'est', l: 'Tiempo estimado (minutos)', t: 'number', min: 0 }, { n: 'remind', l: 'Recordar con cuántos días de anticipación (vacío = no)', t: 'number', min: 0 },
+  { n: 'tags', l: 'Etiquetas (separadas por coma)', t: 'tags' }
+];
+function vTasks() {
+  const f = ui.uf.tasks, q = f.q.trim().toLowerCase(), t0 = today();
+  const all = live('tasks');
+  const list = all.filter(t => (f.estado === 'activas' ? !['completada', 'cancelada'].includes(t.estado) : f.estado === 'todas' ? true : t.estado === f.estado) && (!f.prio || t.prio === f.prio) && (!f.proj || t.project === f.proj) &&
+    (!q || (t.name + ' ' + (t.desc || '') + ' ' + (t.tags || []).join(' ') + ' ' + (t.cat || '')).toLowerCase().includes(q)));
+  const po = { alta: 0, media: 1, baja: 2 };
+  list.sort((a, b) => (a.due || '9999').localeCompare(b.due || '9999') || (po[a.prio] ?? 1) - (po[b.prio] ?? 1));
+  const act = all.filter(t => !['completada', 'cancelada'].includes(t.estado));
+  const over = act.filter(t => t.due && t.due < t0).length;
+  const min = act.reduce((s, t) => s + (t.est || 0), 0);
+  return `<h1>Tareas y actividades</h1><p class="sub">Pendientes y completadas, con proyecto, prioridad, recordatorios y filtros.</p>
+  <div class="grid"><div class="card"><div class="k">Activas</div><div class="v">${act.length}</div></div>
+   <div class="card"><div class="k">Vencidas</div><div class="v ${over ? 'neg' : ''}">${over}</div></div>
+   <div class="card"><div class="k">Completadas</div><div class="v pos">${all.filter(t => t.estado === 'completada').length}</div></div>
+   <div class="card"><div class="k">Tiempo estimado pendiente</div><div class="v">${Math.floor(min / 60)} h ${min % 60} min</div></div></div>
+  <div class="bar"><input type="search" data-uf="tasks.q" placeholder="Buscar…" value="${esc(f.q)}" aria-label="Buscar tareas" style="min-width:150px">
+   <select data-uf="tasks.estado" aria-label="Estado">${opt('activas', f.estado, 'Activas')}${opt('todas', f.estado, 'Todas')}${T_EST.map(x => opt(x, f.estado, cap(x))).join('')}</select>
+   <select data-uf="tasks.prio" aria-label="Prioridad"><option value="">Toda prioridad</option>${PRIO.map(x => opt(x, f.prio, cap(x))).join('')}</select>
+   <select data-uf="tasks.proj" aria-label="Proyecto"><option value="">Todos los proyectos</option>${live('projects').map(p => opt(p.id, f.proj, p.name)).join('')}</select>
+   <span class="grow"></span><button class="btn pri" data-act="newtask">+ Nueva tarea</button></div>
+  <div class="card wrap">${list.length ? `<table><thead><tr><th></th><th>Tarea</th><th>Proyecto</th><th>Fecha límite</th><th>Prioridad</th><th>Estado</th><th></th></tr></thead><tbody>${list.map(t => {
+    const done = t.estado === 'completada', od = t.due && t.due < t0 && !done && t.estado !== 'cancelada', p = live('projects').find(x => x.id === t.project);
+    return `<tr><td><button class="btn sm" data-act="toggletask" data-id="${t.id}" aria-label="${done ? 'Marcar como pendiente' : 'Marcar como completada'}">${done ? '☑' : '☐'}</button></td>
+    <td${done ? ' style="text-decoration:line-through;opacity:.7"' : ''}>${esc(t.name)}${t.desc ? `<div class="mut" style="font-size:12px">${esc(t.desc)}</div>` : ''}${(t.tags || []).map(x => ` <span class="badge">${esc(x)}</span>`).join('')}${t.est ? ` <span class="badge">${t.est} min</span>` : ''}</td>
+    <td>${p ? esc(p.name) : '<span class="mut">—</span>'}</td>
+    <td>${t.due ? dayLabel(t.due) : '<span class="mut">—</span>'}${od ? ' <b class="neg">✖ vencida</b>' : ''}</td>
+    <td><span class="badge${t.prio === 'alta' ? ' est' : ''}">${esc(t.prio || 'media')}</span></td>
+    <td>${selHtml('tasks:' + t.id + ':estado', T_EST, t.estado)}</td>
+    <td class="acts"><button class="btn sm" data-act="edittask" data-id="${t.id}">Editar</button><button class="btn sm dng" data-act="deltask" data-id="${t.id}">Borrar</button></td></tr>`;
+  }).join('')}</tbody></table>` : '<div class="empty">No hay tareas con estos filtros.</div>'}</div>`;
+}
+
+/* ---------- objetivos y proyectos ---------- */
+const projFields = () => [
+  { n: 'name', l: 'Nombre', req: true }, { n: 'desc', l: 'Descripción', t: 'textarea' }, { n: 'target', l: 'Fecha objetivo', t: 'date' },
+  { n: 'prio', l: 'Prioridad', t: 'select', o: PRIO, d: 'media' }, { n: 'budget', l: 'Presupuesto (₡)', t: 'number', min: 0 },
+  { n: 'progress', l: 'Avance manual (%) — se usa solo si no hay etapas ni tareas', t: 'number', min: 0 },
+  { n: 'estado', l: 'Estado', t: 'select', o: ['activo', 'en pausa', 'completado', 'cancelado'], d: 'activo' }
+];
+function projProgress(p) {
+  const ts = live('tasks').filter(t => t.project === p.id && t.estado !== 'cancelada'), st = p.stages || [], tot = ts.length + st.length;
+  if (!tot) return Math.min(100, p.progress || 0);
+  return Math.round((ts.filter(t => t.estado === 'completada').length + st.filter(s => s.done).length) / tot * 100);
+}
+function projCard(p) {
+  const pr = projProgress(p), ts = live('tasks').filter(t => t.project === p.id), st = p.stages || [];
+  const left = p.target ? daysBetween(today(), p.target) : null;
+  return `<div class="card"><div class="row"><strong>${esc(p.name)}</strong><span class="badge">${esc(p.estado)}</span></div>
+   ${p.desc ? `<div class="mut" style="font-size:13px">${esc(p.desc)}</div>` : ''}
+   <div class="row mut" style="font-size:12px;margin-top:6px"><span>Prioridad ${esc(p.prio || 'media')}</span><span>${p.target ? dayLabel(p.target) + ' · ' + (left < 0 ? '<b class="neg">✖ pasó hace ' + (-left) + ' d</b>' : whenTxt(left)) : 'Sin fecha'}</span></div>
+   ${p.budget ? `<div class="mut" style="font-size:12px">Presupuesto: ${crc(p.budget)}</div>` : ''}
+   <div class="prog"><i style="width:${pr}%"></i></div><div class="mut" style="font-size:12px;margin-bottom:8px">${pr} % de avance · ${ts.filter(t => t.estado === 'completada').length}/${ts.length} tareas · ${st.filter(s => s.done).length}/${st.length} etapas</div>
+   ${st.map((s, i) => `<div class="row" style="margin-bottom:3px"><button class="btn sm" data-act="togstage" data-id="${p.id}" data-i="${i}" aria-pressed="${!!s.done}">${s.done ? '☑' : '☐'} ${esc(s.name)}</button><button class="btn sm dng" data-act="delstage" data-id="${p.id}" data-i="${i}" aria-label="Quitar etapa ${esc(s.name)}">✕</button></div>`).join('')}
+   ${ts.slice(0, 4).map(t => `<div class="mut" style="font-size:13px">${t.estado === 'completada' ? '☑' : '☐'} ${esc(t.name)}</div>`).join('')}${ts.length > 4 ? `<div class="mut" style="font-size:12px">+${ts.length - 4} tareas más</div>` : ''}
+   <div class="acts" style="margin-top:10px;flex-wrap:wrap"><button class="btn sm" data-act="addstage" data-id="${p.id}">+ Etapa</button><button class="btn sm" data-act="projtask" data-id="${p.id}">+ Tarea</button><button class="btn sm" data-act="editproj" data-id="${p.id}">Editar</button><button class="btn sm dng" data-act="delproj" data-id="${p.id}">Borrar</button></div></div>`;
+}
+function vProjects() {
+  const list = live('projects').sort((a, b) => (a.estado === 'activo' ? 0 : 1) - (b.estado === 'activo' ? 0 : 1) || (a.target || '9999').localeCompare(b.target || '9999'));
+  return `<h1>Objetivos y proyectos</h1><p class="sub">Divide objetivos grandes en etapas y tareas. El avance se calcula con las etapas y tareas ligadas.</p>
+  <div class="bar"><span class="grow"></span><button class="btn pri" data-act="newproj">+ Nuevo objetivo o proyecto</button></div>
+  ${list.length ? `<div class="grid2">${list.map(projCard).join('')}</div>` : '<div class="card empty">Crea tu primer objetivo, por ejemplo “Independizarme” o “Comprar computadora”.</div>'}`;
+}
+
+/* ---------- independencia ---------- */
+const inp = (path, label, val, type = 'number') => `<label>${label}<input type="${type}" ${type === 'number' ? 'step="any" min="0" inputmode="decimal"' : ''} data-ind="${path}" value="${val === '' || val == null ? '' : esc(val)}"></label>`;
+function indepCalc() {
+  const I = CFG.indep, s = I.sim, mv = I.move, n = v => Number(v) || 0;
+  const bruto = n(s.bruto), deduc = Math.round(bruto * n(s.deduc)) / 100;
+  const neto = s.neto !== '' && s.neto != null ? n(s.neto) : Math.round(bruto - deduc);
+  const viv = Object.values(I.housing).reduce((a, b) => a + n(b), 0), uni = n(s.uni), gastos = viv + uni, margen = neto - gastos;
+  const pend = I.items.filter(x => !x.bought).reduce((a, x) => a + n(x.price), 0);
+  const mob = I.items.length ? pend : n(mv.mobiliario);
+  const inicial = n(mv.transporte) + n(mv.mudanza) + n(mv.deposito) + n(mv.alquiler1) + n(mv.instalacion) + mob;
+  const emerg = Math.round(gastos * n(s.emerg));
+  const ahorros = s.ahorros !== '' && s.ahorros != null ? n(s.ahorros) : disponible();
+  const req = inicial + emerg, brecha = ahorros - req;
+  let riesgo = 'bajo';
+  if (neto <= 0 || margen < 0 || ahorros < inicial) riesgo = 'alto'; else if (margen < neto * 0.15 || ahorros < req) riesgo = 'medio';
+  return { bruto, deduc, neto, viv, uni, gastos, margen, mob, inicial, emerg, ahorros, req, brecha, riesgo, meses: brecha < 0 && margen > 0 ? Math.ceil(-brecha / margen) : null, ahorroMes: Math.round(neto * n(s.ahorroPct) / 100) };
+}
+function vIndep() {
+  const I = CFG.indep, tab = ui.ind, m = I.move, c = indepCalc();
+  const tabs = [['mudanza', 'Mudanza'], ['vivienda', 'Presupuesto de vivienda'], ['lista', 'Lista de instalación'], ['simulador', 'Simulador']];
+  let body = '';
+  if (tab === 'mudanza') {
+    const left = m.fecha ? daysBetween(today(), m.fecha) : null;
+    body = `<div class="grid2"><div class="card"><h2>Datos de la mudanza</h2>${inp('move.destino', 'Lugar de destino', m.destino, 'text')}${inp('move.fecha', 'Fecha estimada', m.fecha, 'date')}${left != null ? `<div class="mut">${left >= 0 ? 'Faltan ' + left + ' días' : 'Fecha ya pasada'}</div>` : ''}</div>
+     <div class="card"><h2>Costos iniciales (₡) <span class="badge est">Estimación</span></h2>${inp('move.transporte', 'Transporte', m.transporte)}${inp('move.mudanza', 'Costo de la mudanza', m.mudanza)}${inp('move.deposito', 'Depósito', m.deposito)}${inp('move.alquiler1', 'Primer alquiler', m.alquiler1)}${inp('move.mobiliario', 'Compra de mobiliario (se ignora si usas la lista de instalación)', m.mobiliario)}${inp('move.instalacion', 'Gastos de instalación', m.instalacion)}</div></div>
+     <div class="card"><div class="k">Costo inicial total estimado</div><div class="v">${crc(c.inicial)}</div><div class="mut" style="font-size:12px">Mobiliario considerado: ${crc(c.mob)} ${I.items.length ? '(pendiente de tu lista de instalación)' : '(el monto de arriba)'}</div></div>`;
+  } else if (tab === 'vivienda') {
+    const h = I.housing, labels = { alquiler: 'Alquiler', electricidad: 'Electricidad', agua: 'Agua', internet: 'Internet', alimentacion: 'Alimentación', transporte: 'Transporte', limpieza: 'Limpieza', higiene: 'Higiene', mantenimiento: 'Mantenimiento' };
+    body = `<div class="grid2"><div class="card"><h2>Gastos mensuales de vivienda (₡) <span class="badge est">Estimación</span></h2>${Object.keys(labels).map(k => inp('housing.' + k, labels[k], h[k])).join('')}</div>
+     <div class="card"><div class="k">Total mensual</div><div class="v">${crc(c.viv)}</div><div class="k" style="margin-top:8px">Total semanal aprox.</div><div class="v">${crc(c.viv * 12 / 52)}</div>${c.viv ? Object.keys(labels).filter(k => Number(h[k]) > 0).sort((a, b) => h[b] - h[a]).map(k => { const p = Math.round(h[k] / c.viv * 100); return `<div class="row" style="margin-top:8px"><span>${labels[k]}</span><span class="mut">${p} %</span></div><div class="prog"><i style="width:${p}%"></i></div>`; }).join('') : ''}</div></div>`;
+  } else if (tab === 'lista') {
+    const tot = I.items.reduce((a, x) => a + (Number(x.price) || 0), 0);
+    body = `<div class="bar"><span class="mut">Pendiente: <b>${crc(c.mob && I.items.length ? c.mob : 0)}</b> de ${crc(tot)}</span><span class="grow"></span><button class="btn pri" data-act="additem">+ Agregar artículo</button></div>
+     <div class="card wrap">${I.items.length ? `<table><thead><tr><th>Artículo</th><th class="num">Precio estimado</th><th>Estado</th><th></th></tr></thead><tbody>${I.items.map((x, i) => `<tr><td>${esc(x.name)}</td><td class="num">${crc(x.price)}</td><td><button class="btn sm" data-act="togitem" data-i="${i}" aria-pressed="${!!x.bought}">${x.bought ? '☑ Comprado' : '☐ Pendiente'}</button></td><td class="acts"><button class="btn sm dng" data-act="delitem" data-i="${i}" aria-label="Quitar ${esc(x.name)}">✕</button></td></tr>`).join('')}</tbody></table>` : '<div class="empty">Agrega lo que necesitas para vivir solo: cama, nevera, cocina, utensilios…</div>'}</div>`;
+  } else {
+    const s = I.sim, msg = { alto: ['neg', '✖', 'Riesgo económico alto'], medio: ['wrn', '▲', 'Riesgo económico medio'], bajo: ['pos', '✔', 'Riesgo económico bajo'] }[c.riesgo];
+    const why = [];
+    if (c.neto <= 0) why.push('Aún no hay un salario neto proyectado.');
+    if (c.neto > 0 && c.margen < 0) why.push('Tus gastos mensuales superan tu salario neto por ' + crc(-c.margen) + '.');
+    if (c.ahorros < c.inicial) why.push('Tus ahorros no cubren los costos iniciales (faltan ' + crc(c.inicial - c.ahorros) + ').');
+    else if (c.ahorros < c.req) why.push('Cubres los costos iniciales, pero no el fondo de emergencia completo (faltan ' + crc(c.req - c.ahorros) + ').');
+    if (c.neto > 0 && c.margen >= 0 && c.margen < c.neto * 0.15) why.push('El margen mensual es menor al 15 % de tu salario neto.');
+    body = `<div class="grid2"><div class="card"><h2>Supuestos <span class="badge est">Estimación</span></h2>
+      ${inp('sim.bruto', 'Salario bruto mensual (₡)', s.bruto)}${inp('sim.deduc', 'Deducciones estimadas (%) — editable, sin impuesto sobre la renta', s.deduc)}${inp('sim.neto', 'Salario neto (₡) — vacío = se calcula con el bruto', s.neto)}
+      ${inp('sim.uni', 'Gastos universitarios mensuales (₡)', s.uni)}${inp('sim.emerg', 'Fondo de emergencia (meses de gastos)', s.emerg)}${inp('sim.ahorroPct', 'Porcentaje de ahorro deseado (%)', s.ahorroPct)}${inp('sim.ahorros', 'Ahorros disponibles (₡) — vacío = tu saldo disponible actual (' + crc(disponible()) + ')', s.ahorros)}</div>
+     <div class="card"><h2>Resultado</h2><div class="${msg[0]}" style="font-size:18px;font-weight:700"><span aria-hidden="true">${msg[1]}</span> ${msg[2]}</div>
+      ${why.map(w => `<div class="mut" style="font-size:13px">• ${esc(w)}</div>`).join('')}
+      <table style="margin-top:8px"><tr><td>Salario bruto</td><td class="num">${crc(c.bruto)}</td></tr><tr><td>Deducciones estimadas</td><td class="num">−${crc(c.deduc)}</td></tr><tr><td><b>Salario neto</b></td><td class="num"><b>${crc(c.neto)}</b></td></tr>
+      <tr><td>Gastos de vivienda</td><td class="num">−${crc(c.viv)}</td></tr><tr><td>Gastos universitarios</td><td class="num">−${crc(c.uni)}</td></tr><tr><td><b>Margen mensual</b></td><td class="num ${c.margen < 0 ? 'neg' : 'pos'}"><b>${crc(c.margen)}</b></td></tr>
+      <tr><td>Ahorro deseado (${esc(s.ahorroPct)} % del neto)</td><td class="num">${crc(c.ahorroMes)} / mes · ${crc(c.ahorroMes / 2)} / quincena</td></tr>
+      <tr><td>Costos iniciales</td><td class="num">${crc(c.inicial)}</td></tr><tr><td>Fondo de emergencia</td><td class="num">${crc(c.emerg)}</td></tr>
+      <tr><td><b>Necesitas ahorrado</b></td><td class="num"><b>${crc(c.req)}</b></td></tr><tr><td>Tus ahorros</td><td class="num">${crc(c.ahorros)}</td></tr>
+      <tr><td><b>${c.brecha >= 0 ? 'Te sobra' : 'Te falta'}</b></td><td class="num ${c.brecha >= 0 ? 'pos' : 'neg'}"><b>${crc(Math.abs(c.brecha))}</b></td></tr></table>
+      ${c.meses ? `<p class="mut">Con tu margen mensual actual tardarías unos <b>${c.meses}</b> meses en reunir lo que falta.</p>` : ''}
+      <p class="note">Proyección con supuestos tuyos: no modifica saldos reales. El porcentaje de deducciones es una aproximación editable; no incluye impuesto sobre la renta.</p></div></div>`;
+  }
+  return `<h1>Independencia</h1><p class="sub">Planifica la mudanza y comprueba si tu ingreso proyectado sostiene una vivienda propia.</p>
+   <div class="tabs">${tabs.map(([k, l]) => `<button class="tab" data-act="indtab" data-t="${k}" aria-pressed="${tab === k}">${l}</button>`).join('')}</div>${body}`;
+}
+
+/* ---------- empleo ---------- */
+const jobFields = () => [
+  { n: 'empresa', l: 'Empresa', req: true }, { n: 'puesto', l: 'Puesto', req: true }, { n: 'fecha', l: 'Fecha de aplicación', t: 'date' },
+  { n: 'fuente', l: 'Fuente de la oferta' }, { n: 'salario', l: 'Salario ofrecido (₡)', t: 'number', min: 0 }, { n: 'ubicacion', l: 'Ubicación' },
+  { n: 'modalidad', l: 'Modalidad', t: 'select', o: ['presencial', 'híbrido', 'remoto'], d: 'presencial' }, { n: 'contacto', l: 'Contacto' },
+  { n: 'estado', l: 'Estado', t: 'select', o: JOB_EST, d: 'encontrada' }, { n: 'nextAction', l: 'Próxima acción' }, { n: 'nextDate', l: 'Fecha de la próxima acción', t: 'date' },
+  { n: 'notas', l: 'Observaciones', t: 'textarea' }
+];
+const markInterview = o => { if (JOB_INT.includes(o.estado)) o.interview = true; };
+function vJobs() {
+  const f = ui.uf.jobs, q = f.q.trim().toLowerCase(), all = live('jobs');
+  const list = all.filter(j => (!f.estado || j.estado === f.estado) && (!q || (j.empresa + ' ' + j.puesto + ' ' + (j.notas || '') + ' ' + (j.contacto || '')).toLowerCase().includes(q)))
+    .sort((a, b) => (FINAL_JOB.includes(a.estado) ? 1 : 0) - (FINAL_JOB.includes(b.estado) ? 1 : 0) || (a.nextDate || '9999').localeCompare(b.nextDate || '9999'));
+  const sent = all.filter(j => j.estado !== 'encontrada').length, int = all.filter(j => j.interview).length;
+  const act = all.filter(j => !FINAL_JOB.includes(j.estado)).length, off = all.filter(j => ['oferta recibida', 'aceptada'].includes(j.estado)).length;
+  return `<h1>Empleo</h1><p class="sub">Seguimiento de tus postulaciones, entrevistas y próximas acciones.</p>
+  <div class="grid"><div class="card"><div class="k">Postulaciones enviadas</div><div class="v">${sent}</div></div><div class="card"><div class="k">Activas</div><div class="v">${act}</div></div>
+   <div class="card"><div class="k">Llegaron a entrevista</div><div class="v">${int}</div><div class="mut" style="font-size:12px">${sent ? Math.round(int / sent * 100) + ' % de las enviadas' : '—'}</div></div>
+   <div class="card"><div class="k">Ofertas</div><div class="v ${off ? 'pos' : ''}">${off}</div></div></div>
+  <div class="bar"><input type="search" data-uf="jobs.q" placeholder="Buscar…" value="${esc(f.q)}" aria-label="Buscar postulaciones" style="min-width:150px">
+   <select data-uf="jobs.estado" aria-label="Estado"><option value="">Todos los estados</option>${JOB_EST.map(x => opt(x, f.estado, cap(x))).join('')}</select><span class="grow"></span><button class="btn pri" data-act="newjob">+ Nueva postulación</button></div>
+  <div class="card wrap">${list.length ? `<table><thead><tr><th>Empresa / puesto</th><th>Estado</th><th>Próxima acción</th><th class="num">Salario</th><th>Modalidad</th><th></th></tr></thead><tbody>${list.map(j => {
+    const n = j.nextDate ? daysBetween(today(), j.nextDate) : null;
+    return `<tr><td><b>${esc(j.empresa)}</b><div class="mut" style="font-size:12px">${esc(j.puesto)}${j.fuente ? ' · ' + esc(j.fuente) : ''}${j.fecha ? ' · ' + dayLabel(j.fecha) : ''}</div></td>
+    <td>${selHtml('jobs:' + j.id + ':estado', JOB_EST, j.estado)}</td>
+    <td>${j.nextAction ? esc(j.nextAction) : '<span class="mut">—</span>'}${j.nextDate ? `<div class="${n < 0 && !FINAL_JOB.includes(j.estado) ? 'neg' : 'mut'}" style="font-size:12px">${n < 0 && !FINAL_JOB.includes(j.estado) ? '✖ ' : ''}${dayLabel(j.nextDate)} · ${whenTxt(n)}</div>` : ''}</td>
+    <td class="num">${j.salario ? crc(j.salario) : '—'}</td><td>${esc(cap(j.modalidad || ''))}${j.ubicacion ? `<div class="mut" style="font-size:12px">${esc(j.ubicacion)}</div>` : ''}</td>
+    <td class="acts"><button class="btn sm" data-act="editjob" data-id="${j.id}">Editar</button><button class="btn sm dng" data-act="deljob" data-id="${j.id}">Borrar</button></td></tr>`;
+  }).join('')}</tbody></table>` : '<div class="empty">Registra tu primera postulación.</div>'}</div>
+  <p class="mut" style="font-size:12px">“Llegaron a entrevista” cuenta las postulaciones que alguna vez estuvieron en entrevista, segunda entrevista, oferta o aceptada.</p>`;
+}
+
+/* ---------- educación ---------- */
+const CONCEPTOS = ['matrícula', 'beca (descuento)', 'transporte', 'materiales', 'alimentación', 'residencia', 'otro'];
+const eduFields = {
+  inst: () => [{ n: 'name', l: 'Institución', req: true }, { n: 'carrera', l: 'Carrera' }, { n: 'estado', l: 'Estado', t: 'select', o: ['interesado', 'postulado', 'admitido', 'matriculado', 'descartado'], d: 'interesado' }, { n: 'notas', l: 'Notas', t: 'textarea' }],
+  gasto: () => [{ n: 'periodo', l: 'Período (por ejemplo 2027-I o 2027)', req: true }, { n: 'concepto', l: 'Concepto', t: 'select', o: CONCEPTOS, d: 'matrícula' }, { n: 'monto', l: 'Monto (₡)', t: 'number', req: true, min: 0 }, { n: 'notas', l: 'Notas' }],
+  fecha: () => [{ n: 'title', l: 'Descripción', req: true }, { n: 'date', l: 'Fecha', t: 'date', req: true }, { n: 'tipo', l: 'Tipo', t: 'select', o: ['admisión', 'matrícula', 'inicio de lecciones', 'examen', 'beca', 'otro'], d: 'admisión' }]
+};
+const eduTitle = { inst: 'Institución o carrera', gasto: 'Gasto educativo', fecha: 'Fecha importante' };
+function vEdu() {
+  const E = live('edu'), insts = E.filter(x => x.kind === 'inst'), fechas = E.filter(x => x.kind === 'fecha').sort((a, b) => a.date.localeCompare(b.date));
+  const per = {}; E.filter(x => x.kind === 'gasto').forEach(g => { (per[g.periodo] = per[g.periodo] || []).push(g); });
+  const actions = (id, k) => `<td class="acts"><button class="btn sm" data-act="editedu" data-id="${id}">Editar</button><button class="btn sm dng" data-act="deledu" data-id="${id}">Borrar</button></td>`;
+  return `<h1>Educación</h1><p class="sub">Instituciones, presupuesto por semestre o año y fechas importantes. Las fechas aparecen en el calendario.</p>
+  <div class="grid2">
+   <div class="card wrap"><div class="row"><h2>Instituciones y carreras</h2><button class="btn sm" data-act="newedu" data-k="inst">+ Agregar</button></div>${insts.length ? `<table>${insts.map(x => `<tr><td><b>${esc(x.name)}</b><div class="mut" style="font-size:12px">${esc(x.carrera || '')}</div></td><td><span class="badge">${esc(x.estado)}</span></td>${actions(x.id)}</tr>`).join('')}</table>` : '<div class="empty">Aún no registras instituciones.</div>'}</div>
+   <div class="card wrap"><div class="row"><h2>Fechas importantes</h2><button class="btn sm" data-act="newedu" data-k="fecha">+ Agregar</button></div>${fechas.length ? `<table>${fechas.map(x => `<tr><td><b>${esc(x.title)}</b><div class="mut" style="font-size:12px">${dayLabel(x.date)} · ${x.date < today() ? 'pasó' : whenTxt(daysBetween(today(), x.date))}</div></td><td><span class="badge">${esc(x.tipo || '')}</span></td>${actions(x.id)}</tr>`).join('')}</table>` : '<div class="empty">Sin fechas registradas.</div>'}</div>
+  </div>
+  <div class="row" style="margin:6px 0 10px"><h2 style="margin:0">Presupuesto por período <span class="badge est">Estimación</span></h2><button class="btn pri sm" data-act="newedu" data-k="gasto">+ Agregar gasto</button></div>
+  ${Object.keys(per).sort().map(p => { const g = per[p], tot = g.filter(x => x.concepto !== 'beca (descuento)').reduce((s, x) => s + x.monto, 0), bec = g.filter(x => x.concepto === 'beca (descuento)').reduce((s, x) => s + x.monto, 0);
+    return `<div class="card wrap" style="margin-bottom:10px"><div class="row"><strong>${esc(p)}</strong><span>Gastos ${crc(tot)} · Becas −${crc(bec)} · <b>A cubrir ${crc(tot - bec)}</b></span></div><table>${g.map(x => `<tr><td>${esc(cap(x.concepto))}${x.notas ? `<div class="mut" style="font-size:12px">${esc(x.notas)}</div>` : ''}</td><td class="num ${x.concepto === 'beca (descuento)' ? 'pos' : ''}">${x.concepto === 'beca (descuento)' ? '−' : ''}${crc(x.monto)}</td>${actions(x.id)}</tr>`).join('')}</table></div>`; }).join('') || '<div class="card empty">Agrega matrícula, transporte, materiales, alimentación, residencia o becas por semestre.</div>'}`;
+}
+
+/* ---------- reportes ---------- */
+function rangeFor(mode, d, from, to) {
+  if (mode === 'dia') return [d, d];
+  if (mode === 'semana') { const a = mondayOf(d); return [a, addDays(a, 6)]; }
+  if (mode === 'mes') { const m = monthOf(d); return [m + '-01', lastDayOf(m)]; }
+  if (mode === 'trimestre') { const y = Number(d.slice(0, 4)), q = Math.floor((Number(d.slice(5, 7)) - 1) / 3); return [ymd(new Date(y, q * 3, 1)), ymd(new Date(y, q * 3 + 3, 0))]; }
+  if (mode === 'año') { const y = d.slice(0, 4); return [y + '-01-01', y + '-12-31']; }
+  return from <= to ? [from, to] : [to, from];
+}
+const shiftRep = (mode, d, k) => mode === 'dia' ? addDays(d, k) : mode === 'semana' ? addDays(d, 7 * k) : mode === 'mes' ? shiftMonth(monthOf(d), k) + '-01' : mode === 'trimestre' ? shiftMonth(monthOf(d), 3 * k) + '-01' : (Number(d.slice(0, 4)) + k) + '-01-01';
+function statsRange(a, b) {
+  let inc = 0, exp = 0, n = 0; const cx = {}, ci = {};
+  live('transactions').forEach(t => {
+    if (t.status !== 'confirmado' || t.date < a || t.date > b) return;
+    if (t.type === 'ingreso') { inc += t.amount; ci[t.category || ''] = (ci[t.category || ''] || 0) + t.amount; n++; }
+    else if (t.type === 'gasto') { exp += t.amount; cx[t.category || ''] = (cx[t.category || ''] || 0) + t.amount; n++; }
+  });
+  return { inc, exp, net: inc - exp, cx, ci, n };
+}
+function prevRange(r) {
+  const m = ui.rep.mode;
+  if (m === 'custom') { const len = daysBetween(r[0], r[1]) + 1; return [addDays(r[0], -len), addDays(r[0], -1)]; }
+  return rangeFor(m, shiftRep(m, ui.rep.date, -1));
+}
+function buckets(a, b) {
+  const days = daysBetween(a, b) + 1, out = [];
+  if (days <= 31) for (let i = 0; i < days; i++) { const d = addDays(a, i), s = statsRange(d, d); out.push({ label: String(Number(d.slice(8))), inc: s.inc, exp: s.exp }); }
+  else for (let m = monthOf(a); m <= monthOf(b); m = shiftMonth(m, 1)) { const lo = m + '-01' > a ? m + '-01' : a, hi = lastDayOf(m) < b ? lastDayOf(m) : b, s = statsRange(lo, hi); out.push({ label: monthShort(m), inc: s.inc, exp: s.exp }); }
+  return out;
+}
+function barChartB(data) {
+  const max = Math.max(1, ...data.flatMap(d => [d.inc, d.exp])), W = 520, H = 170, pad = 10, step = (W - 2 * pad) / data.length, bw = Math.max(2, Math.min(15, (step - 4) / 2));
+  let s = `<svg viewBox="0 0 ${W} ${H + 24}" width="100%" role="img" aria-label="Ingresos frente a gastos del período">`;
+  data.forEach((d, i) => {
+    const x = pad + i * step + (step - 2 * bw - 2) / 2, h1 = d.inc / max * H, h2 = d.exp / max * H;
+    s += `<rect x="${x}" y="${H - h1}" width="${bw}" height="${Math.max(h1, d.inc ? 2 : 0)}" fill="#22C55E" rx="1"><title>${esc(d.label)}: ingresos ${crc(d.inc)}</title></rect><rect x="${x + bw + 2}" y="${H - h2}" width="${bw}" height="${Math.max(h2, d.exp ? 2 : 0)}" fill="#EF4444" rx="1"><title>${esc(d.label)}: gastos ${crc(d.exp)}</title></rect>`;
+    if (data.length <= 16 || i % Math.ceil(data.length / 12) === 0) s += `<text x="${x + bw}" y="${H + 16}" text-anchor="middle" fill="#94A3B8" font-size="10">${esc(d.label)}</text>`;
+  });
+  return s + `<line x1="0" x2="${W}" y1="${H}" y2="${H}" stroke="#2c3748"/></svg><div class="leg"><span><b class="pos">■</b> Ingresos</span><span><b class="neg">■</b> Gastos</span></div>`;
+}
+const pctVar = (cur, prev) => prev ? Math.round((cur - prev) / prev * 100) : null;
+const varTxt = (cur, prev, goodUp) => { const p = pctVar(cur, prev); if (p === null) return '<span class="mut">sin período previo</span>'; const up = p > 0, good = p === 0 ? null : (up === goodUp); return `<span class="${good === null ? 'mut' : good ? 'pos' : 'neg'}">${up ? '▲' : p < 0 ? '▼' : '='} ${Math.abs(p)} % vs. período anterior</span>`; };
+function repData() {
+  const R = ui.rep, r = rangeFor(R.mode, R.date, R.from, R.to), pr = prevRange(r);
+  return { r, pr, s: statsRange(r[0], r[1]), p: statsRange(pr[0], pr[1]) };
+}
+const rangeLabel = r => r[0] === r[1] ? dayLabel(r[0]) : dayLabel(r[0]) + ' – ' + dayLabel(r[1]);
+function vReports() {
+  const R = ui.rep, D = repData(), { r, pr, s, p } = D, factor = (daysBetween(r[0], r[1]) + 1) / 30.4375;
+  const modes = [['dia', 'Día'], ['semana', 'Semana'], ['mes', 'Mes'], ['trimestre', 'Trimestre'], ['año', 'Año'], ['custom', 'Personalizado']];
+  const catTable = (obj, prevObj, goodUp) => { const rows = Object.entries(obj).sort((a, b) => b[1] - a[1]), tot = rows.reduce((x, y) => x + y[1], 0); return rows.length ? `<table>${rows.map(([id, v]) => `<tr><td>${esc(id ? catName(id) : 'Sin categoría')}</td><td class="num">${crc(v)}</td><td class="num mut">${Math.round(v / tot * 100)} %</td><td class="num">${varTxt(v, prevObj[id] || 0, goodUp)}</td></tr>`).join('')}</table>` : '<div class="empty">Sin datos en el período.</div>'; };
+  const buds = live('budgets');
+  const vacio = !s.n;
+  return `<h1>Reportes y estadísticas</h1><p class="sub">Solo cuentan los movimientos confirmados. Período: <b>${esc(rangeLabel(r))}</b></p>
+  <div class="bar noprint"><select data-rep="mode" aria-label="Tipo de período">${modes.map(([k, l]) => opt(k, R.mode, l)).join('')}</select>
+   ${R.mode === 'custom' ? `<input type="date" data-rep="from" value="${R.from}" aria-label="Desde"><input type="date" data-rep="to" value="${R.to}" aria-label="Hasta">` : `<button class="btn sm" data-act="repnav" data-k="-1" aria-label="Período anterior">‹</button><input type="date" data-rep="date" value="${R.date}" aria-label="Fecha de referencia"><button class="btn sm" data-act="repnav" data-k="1" aria-label="Período siguiente">›</button><button class="btn sm" data-act="reptoday">Hoy</button>`}
+   <span class="grow"></span><button class="btn sm" data-act="repcsv">CSV</button><button class="btn sm" data-act="repxls">Excel</button><button class="btn sm" data-act="repprint">PDF / Imprimir</button></div>
+  <div class="grid">
+   <div class="card"><div class="k">Ingresos totales</div><div class="v pos">${crc(s.inc)}</div><div style="font-size:12px">${varTxt(s.inc, p.inc, true)}</div></div>
+   <div class="card"><div class="k">Gastos totales</div><div class="v neg">${crc(s.exp)}</div><div style="font-size:12px">${varTxt(s.exp, p.exp, false)}</div></div>
+   <div class="card"><div class="k">Ahorro neto</div><div class="v ${s.net < 0 ? 'neg' : 'pos'}">${s.net < 0 ? '−' : ''}${crc(Math.abs(s.net))}</div><div style="font-size:12px">Anterior: ${crc(p.net)}</div></div>
+   <div class="card"><div class="k">Endeudamiento (tarjetas)</div><div class="v ${deudaTarjetas() ? 'neg' : ''}">${crc(deudaTarjetas())}</div><div class="mut" style="font-size:12px">Saldo actual</div></div>
+   <div class="card"><div class="k">Posición neta en cuentas</div><div class="v">${crc(disponible() + deudaTarjetas())}</div><div class="mut" style="font-size:12px">Disponible menos deuda de tarjetas. No incluye otros activos o pasivos.</div></div>
+  </div>
+  ${vacio ? '<div class="card empty">No hay movimientos confirmados en este período.</div>' : ''}
+  <div class="grid2"><div class="card"><h2>Ingresos frente a gastos</h2>${barChartB(buckets(r[0], r[1]))}</div>
+   <div class="card"><h2>Gastos por categoría</h2>${catTable(s.cx, p.cx, false)}</div></div>
+  <div class="grid2"><div class="card"><h2>Ingresos por categoría</h2>${catTable(s.ci, p.ci, true)}</div>
+   <div class="card"><h2>Cumplimiento presupuestario</h2><p class="mut" style="font-size:12px;margin-top:0">Límite mensual ajustado a la duración del período (×${factor.toFixed(2)}). <span class="badge est">Estimación</span></p>${buds.length ? buds.map(b => budRow({ category: b.category, limit: Math.round(b.limit * factor) }, s.cx[b.category] || 0)).join('') : '<div class="empty">Sin presupuestos definidos.</div>'}</div></div>
+  <p class="mut" style="font-size:12px">Período anterior comparado: ${esc(rangeLabel(pr))}.</p>`;
+}
+function exportReportCSV() {
+  const [a, b] = repData().r, q = v => '"' + String(v ?? '').replace(/"/g, '""') + '"';
+  const rows = [['fecha', 'tipo', 'descripcion', 'monto_crc', 'cuenta', 'categoria', 'estado']];
+  live('transactions').filter(t => t.date >= a && t.date <= b).sort((x, y) => x.date.localeCompare(y.date)).forEach(t => rows.push([t.date, t.type, t.description, t.amount, accName(t.account), t.category ? catName(t.category) : '', t.status]));
+  download('nexus-reporte-' + a + '_' + b + '.csv', '﻿' + rows.map(r => r.map(q).join(',')).join('\n'), 'text/csv');
+}
+function exportReportXLS() {
+  const { r, s } = repData(), [a, b] = r;
+  const row = (c, h) => '<tr>' + c.map(x => `<${h ? 'th' : 'td'}>${esc(x)}</${h ? 'th' : 'td'}>`).join('') + '</tr>';
+  let h = `<html><head><meta charset="utf-8"></head><body><h3>NEXUS — Reporte ${esc(a)} a ${esc(b)}</h3><table border="1">${row(['Indicador', 'Monto (CRC)'], 1)}${row(['Ingresos', s.inc])}${row(['Gastos', s.exp])}${row(['Ahorro neto', s.net])}</table><br><table border="1">${row(['Categoría de gasto', 'Monto (CRC)'], 1)}`;
+  Object.entries(s.cx).sort((x, y) => y[1] - x[1]).forEach(([id, v]) => { h += row([id ? catName(id) : 'Sin categoría', v]); });
+  h += `</table><br><table border="1">${row(['Fecha', 'Tipo', 'Descripción', 'Monto (CRC)', 'Cuenta', 'Categoría', 'Estado'], 1)}`;
+  live('transactions').filter(t => t.date >= a && t.date <= b).sort((x, y) => x.date.localeCompare(y.date)).forEach(t => { h += row([t.date, t.type, t.description || '', t.amount, accName(t.account), t.category ? catName(t.category) : '', t.status]); });
+  download('nexus-reporte-' + a + '_' + b + '.xls', h + '</table></body></html>', 'application/vnd.ms-excel');
+}
+
+/* ---------- documentos ---------- */
+function vDocs() {
+  const f = ui.uf.docs, q = f.q.trim().toLowerCase(), t0 = today();
+  const list = live('docs').filter(d => (!f.type || d.type === f.type) && (!q || (d.name + ' ' + (d.notes || '') + ' ' + (d.tags || []).join(' ')).toLowerCase().includes(q))).sort((a, b) => (a.venc || '9999').localeCompare(b.venc || '9999'));
+  return `<h1>Documentos</h1><p class="sub">Referencias y archivos personales. Los archivos se guardan solo en este navegador (privados, sin enlaces públicos) y entran al respaldo JSON.</p>
+  <div class="bar"><input type="search" data-uf="docs.q" placeholder="Buscar…" value="${esc(f.q)}" aria-label="Buscar documentos" style="min-width:150px">
+   <select data-uf="docs.type" aria-label="Tipo"><option value="">Todos los tipos</option>${DOC_T.map(x => opt(x, f.type, cap(x))).join('')}</select><span class="grow"></span><button class="btn pri" data-act="newdoc">+ Nuevo documento</button></div>
+  <div class="card wrap">${list.length ? `<table><thead><tr><th>Documento</th><th>Tipo</th><th>Vencimiento</th><th>Archivo</th><th></th></tr></thead><tbody>${list.map(d => {
+    const n = d.venc ? daysBetween(t0, d.venc) : null;
+    return `<tr><td><b>${esc(d.name)}</b>${(d.tags || []).map(x => ` <span class="badge">${esc(x)}</span>`).join('')}${d.notes ? `<div class="mut" style="font-size:12px">${esc(d.notes)}</div>` : ''}</td><td>${esc(cap(d.type || 'otro'))}</td>
+    <td>${d.venc ? dayLabel(d.venc) + (n < 0 ? ' <b class="neg">✖ vencido</b>' : n <= 30 ? ' <b class="wrn">▲ ' + whenTxt(n) + '</b>' : '') : '<span class="mut">—</span>'}</td>
+    <td>${d.blob ? `<button class="btn sm" data-act="getdoc" data-id="${d.id}">Descargar</button> <span class="mut" style="font-size:12px">${esc(d.fileName || '')} · ${(d.size / 1024).toFixed(0)} KB</span>` : '<span class="mut">Solo referencia</span>'}</td>
+    <td class="acts"><button class="btn sm" data-act="editdoc" data-id="${d.id}">Editar</button><button class="btn sm dng" data-act="deldoc" data-id="${d.id}">Borrar</button></td></tr>`;
+  }).join('')}</tbody></table>` : '<div class="empty">Guarda contratos, comprobantes, recibos, garantías y documentos académicos o laborales.</div>'}</div>`;
+}
+function docForm(d) {
+  d = d || {};
+  openForm(d.id ? 'Editar documento' : 'Nuevo documento', `
+   <label>Nombre<input name="name" required value="${esc(d.name)}"></label>
+   <label>Tipo<select name="type">${DOC_T.map(x => opt(x, d.type || 'otro', cap(x))).join('')}</select></label>
+   <label>Fecha de vencimiento (opcional)<input name="venc" type="date" value="${esc(d.venc)}"></label>
+   <label>Etiquetas (separadas por coma)<input name="tags" value="${esc((d.tags || []).join(', '))}"></label>
+   <label>Notas<textarea name="notes" rows="2">${esc(d.notes)}</textarea></label>
+   <label>Archivo (opcional, máximo 15 MB)${d.fileName ? ' — actual: ' + esc(d.fileName) + ' (si eliges otro, lo reemplaza)' : ''}<input name="file" type="file"></label>`,
+  fd => {
+    const name = (fd.get('name') || '').trim(); if (!name) return 'Escribe un nombre.';
+    const o = Object.assign({}, d, { name, type: fd.get('type'), venc: fd.get('venc') || '', tags: (fd.get('tags') || '').split(',').map(x => x.trim()).filter(Boolean), notes: (fd.get('notes') || '').trim() });
+    const f = fd.get('file');
+    if (f && f.size) { if (f.size > 15 * 1024 * 1024) return 'El archivo supera 15 MB.'; o.blob = f; o.fileName = f.name; o.fileType = f.type; o.size = f.size; }
+    return save('docs', o).then(() => null);
+  });
+}
+
+/* ---------- respaldo con archivos ---------- */
+const blobToDataURL = b => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => rej(r.error); r.readAsDataURL(b); });
+function dataURLToBlob(u) {
+  const [h, b] = u.split(','), mime = (h.match(/:(.*?);/) || [])[1] || 'application/octet-stream', bin = atob(b), arr = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+  return new Blob([arr], { type: mime });
+}
+async function reviveBlob(o) { if (o && o.blobIsData && typeof o.blob === 'string') { o.blob = dataURLToBlob(o.blob); delete o.blobIsData; } }
+async function exportJSON() {
+  const data = {};
+  for (const n of STORES) data[n] = await Promise.all(S[n].map(async o => (o.blob instanceof Blob) ? Object.assign({}, o, { blob: await blobToDataURL(o.blob), blobIsData: true }) : o));
+  download('nexus-respaldo-' + today() + '.json', JSON.stringify({ app: 'nexus', version: 2, exported_at: new Date().toISOString(), data }, null, 1), 'application/json');
+}
+
+/* ---------- acciones de los módulos ---------- */
+async function moduleChange(t) {
+  if (t.dataset.sf) {
+    const [st, id, fld] = t.dataset.sf.split(':'), o = S[st].find(x => x.id === id); if (!o) return true;
+    o[fld] = t.value;
+    if (st === 'jobs') markInterview(o);
+    if (st === 'tasks') o.doneAt = o.estado === 'completada' ? new Date().toISOString() : null;
+    await save(st, o); render(); return true;
+  }
+  if (t.dataset.ind) {
+    const v = t.type === 'number' ? (t.value === '' ? '' : Number(t.value)) : t.value;
+    setPath(CFG.indep, t.dataset.ind, v); await save('settings', CFG); render(); return true;
+  }
+  if (t.dataset.uf) { if (t.type === 'text' || t.type === 'search') return true; setPath(ui.uf, t.dataset.uf, t.value); render(); return true; }
+  if (t.dataset.rep) { ui.rep[t.dataset.rep] = t.value; render(); return true; }
+  return false;
+}
+async function moduleClick(a, el, id, i) {
+  if (DELMAP[a]) return delRec(DELMAP[a][0], id, DELMAP[a][1]);
+  const rec = st => S[st].find(x => x.id === id);
+  switch (a) {
+    case 'calmode': ui.cal.mode = el.dataset.m; render(); break;
+    case 'caltoday': ui.cal.date = today(); render(); break;
+    case 'calnav': { const k = Number(el.dataset.k), m = ui.cal.mode; ui.cal.date = m === 'mes' ? shiftMonth(monthOf(ui.cal.date), k) + '-01' : m === 'semana' ? addDays(ui.cal.date, 7 * k) : m === 'dia' ? addDays(ui.cal.date, k) : addDays(ui.cal.date, 30 * k); render(); break; }
+    case 'calday': ui.cal.date = el.dataset.d; ui.cal.mode = 'dia'; render(); break;
+    case 'newev': crud('events', 'Evento', evFields(), { date: el.dataset.d || today() }, {}); break;
+    case 'editev': crud('events', 'Evento', evFields(), rec('events'), { delAct: 'delev' }); break;
+    case 'newtask': crud('tasks', 'Tarea', taskFields(), null, {}); break;
+    case 'edittask': crud('tasks', 'Tarea', taskFields(), rec('tasks'), { delAct: 'deltask', post: o => { o.doneAt = o.estado === 'completada' ? (o.doneAt || new Date().toISOString()) : null; } }); break;
+    case 'toggletask': { const o = rec('tasks'); o.estado = o.estado === 'completada' ? 'pendiente' : 'completada'; o.doneAt = o.estado === 'completada' ? new Date().toISOString() : null; await save('tasks', o); render(); break; }
+    case 'newproj': crud('projects', 'Objetivo o proyecto', projFields(), { stages: [] }, {}); break;
+    case 'editproj': crud('projects', 'Objetivo o proyecto', projFields(), rec('projects'), { delAct: 'delproj' }); break;
+    case 'projtask': crud('tasks', 'Tarea', taskFields(), { project: id }, {}); break;
+    case 'addstage': openForm('Nueva etapa', '<label>Nombre de la etapa<input name="name" required></label>', async fd => { const n = (fd.get('name') || '').trim(); if (!n) return 'Escribe un nombre.'; const p = rec('projects'); p.stages = (p.stages || []).concat([{ name: n, done: false }]); await save('projects', p); }); break;
+    case 'togstage': { const p = rec('projects'); p.stages[i].done = !p.stages[i].done; await save('projects', p); render(); break; }
+    case 'delstage': { const p = rec('projects'); p.stages.splice(i, 1); await save('projects', p); render(); break; }
+    case 'indtab': ui.ind = el.dataset.t; render(); break;
+    case 'gotoind': ui.view = 'independencia'; ui.ind = el.dataset.t || 'mudanza'; location.hash = ui.view; render(); break;
+    case 'additem': simpleForm('Artículo de la lista', false, async (n, m) => { CFG.indep.items.push({ name: n, price: m, bought: false }); await save('settings', CFG); }); break;
+    case 'togitem': CFG.indep.items[i].bought = !CFG.indep.items[i].bought; await save('settings', CFG); render(); break;
+    case 'delitem': CFG.indep.items.splice(i, 1); await save('settings', CFG); render(); break;
+    case 'newjob': crud('jobs', 'Postulación', jobFields(), null, { post: markInterview }); break;
+    case 'editjob': crud('jobs', 'Postulación', jobFields(), rec('jobs'), { delAct: 'deljob', post: markInterview }); break;
+    case 'newedu': { const k = el.dataset.k; crud('edu', eduTitle[k], eduFields[k](), { kind: k }, {}); break; }
+    case 'editedu': { const o = rec('edu'); crud('edu', eduTitle[o.kind], eduFields[o.kind](), o, { delAct: 'deledu' }); break; }
+    case 'repnav': ui.rep.date = shiftRep(ui.rep.mode, ui.rep.date, Number(el.dataset.k)); render(); break;
+    case 'reptoday': ui.rep.date = today(); render(); break;
+    case 'repcsv': exportReportCSV(); break;
+    case 'repxls': exportReportXLS(); break;
+    case 'repprint': window.print(); break;
+    case 'newdoc': docForm(); break;
+    case 'editdoc': docForm(rec('docs')); break;
+    case 'getdoc': { const d = rec('docs'); if (d && d.blob) { const u = URL.createObjectURL(d.blob), x = document.createElement('a'); x.href = u; x.download = d.fileName || d.name; x.click(); setTimeout(() => URL.revokeObjectURL(u), 1000); } break; }
+  }
+}
+document.addEventListener('input', e => {
+  const t = e.target;
+  if (t.dataset.uf && (t.type === 'text' || t.type === 'search')) {
+    setPath(ui.uf, t.dataset.uf, t.value); const pos = t.selectionStart; render();
+    const n = $('[data-uf="' + t.dataset.uf + '"]'); if (n) { n.focus(); try { n.setSelectionRange(pos, pos); } catch (x) {} }
+  }
+});
+document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('[role=button][data-act]')) { e.preventDefault(); e.target.click(); } });
+
+/* ---------- eventos ---------- */
+const byId = (n, id) => S[n].find(x => x.id === id);
+document.addEventListener('click', async e => {
+  const el = e.target.closest('[data-act]'); if (!el || el.tagName === 'INPUT') return;
+  const a = el.dataset.act, id = el.dataset.id, i = Number(el.dataset.i);
+  switch (a) {
+    case 'go': ui.view = el.dataset.v; location.hash = ui.view; render(); break;
+    case 'close': $('#dlg').close(); break;
+    case 'mprev': ui.month = shiftMonth(ui.month, -1); render(); break;
+    case 'mnext': ui.month = shiftMonth(ui.month, 1); render(); break;
+    case 'mnow': ui.month = monthOf(today()); render(); break;
+    case 'newtx': txForm(); break;
+    case 'edittx': txForm(byId('transactions', id)); break;
+    case 'duptx': { const t = Object.assign({}, byId('transactions', id)); ['id', 'created_at', 'updated_at', 'version', 'deleted_at'].forEach(k => delete t[k]); t.date = today(); await save('transactions', t); ui.month = monthOf(t.date); render(); break; }
+    case 'save': if (formSave) await formSave(); break;
+    case 'dlg2ok': { const r = dlg2Res; dlg2Res = null; $('#dlg2').close(); if (r) r(true); break; }
+    case 'dlg2no': $('#dlg2').close(); break;
+    case 'deltx': if (await askConfirm('¿Borrar este movimiento?', 'Borrar')) { await removeRec('transactions', id); render(); } break;
+    case 'newacc': accForm(); break;
+    case 'editacc': accForm(byId('accounts', id)); break;
+    case 'delacc': {
+      if (live('transactions').some(t => t.account === id || t.toAccount === id)) return tell('Esta cuenta tiene movimientos. Edítala y márcala como inactiva en lugar de borrarla.');
+      if (await askConfirm('¿Borrar esta cuenta?', 'Borrar')) { await removeRec('accounts', id); render(); } break;
+    }
+    case 'newbud': budForm(); break;
+    case 'editbud': budForm(byId('budgets', id)); break;
+    case 'delbud': if (await askConfirm('¿Borrar este presupuesto?', 'Borrar')) { await removeRec('budgets', id); render(); } break;
+    case 'addess': simpleForm('Gasto esencial mensual', false, async (n, m) => { CFG.plan.essentials.push({ name: n, monthly: m }); await savePlan(); }); break;
+    case 'deless': CFG.plan.essentials.splice(i, 1); await savePlan(); render(); break;
+    case 'addext': simpleForm('Gasto extraordinario', true, async (n, m, d) => { CFG.plan.extras.push({ name: n, amount: m, date: d }); await savePlan(); }); break;
+    case 'delext': CFG.plan.extras.splice(i, 1); await savePlan(); render(); break;
+    case 'expjson': await exportJSON(); break;
+    case 'expcsv': exportCSV(); break;
+    case 'togcat': { const c = byId('categories', id); c.active = c.active === false; await save('categories', c); render(); break; }
+    case 'newcat': openForm('Nueva categoría', `<label>Nombre<input name="name" required></label><label>Tipo<select name="type"><option value="gasto">Gasto</option><option value="ingreso">Ingreso</option></select></label>`,
+      fd => { const name = (fd.get('name') || '').trim(); if (!name) return 'Escribe un nombre.'; return save('categories', { name, type: fd.get('type'), active: true }).then(() => null); }); break;
+    case 'wipe': if (await askConfirm('Se borrarán TODOS los datos de este navegador. ¿Seguro?', 'Continuar') && await askConfirm('Última confirmación: ¿borrar todo? No se puede deshacer.', 'Borrar todo')) { for (const n of STORES) await reqP(store(n, 'readwrite').clear()); location.reload(); } break;
+    default: await moduleClick(a, el, id, i);
+  }
+});
+document.addEventListener('change', async e => {
+  const t = e.target;
+  if (await moduleChange(t)) return;
+  if (t.dataset.f) { ui.f[t.dataset.f] = t.value; render(); }
+  else if (t.dataset.p) { CFG.plan[t.dataset.p] = t.type === 'number' && t.value !== '' ? Number(t.value) : t.value; await savePlan(); render(); }
+  else if (t.dataset.act === 'impjson' && t.files[0]) { await importJSON(t.files[0]); t.value = ''; }
+});
+document.addEventListener('input', e => { if (e.target.dataset.f === 'q') { ui.f.q = e.target.value; const pos = e.target.selectionStart; render(); const n = $('[data-f=q]'); if (n) { n.focus(); n.setSelectionRange(pos, pos); } } });
+window.addEventListener('hashchange', () => { const v = location.hash.slice(1); if (NAV.some(n => n[0] === v) && v !== ui.view) { ui.view = v; render(); } });
+
+boot().then(() => { const v = location.hash.slice(1); if (NAV.some(n => n[0] === v)) ui.view = v; render(); })
+  .catch(err => { $('#main').innerHTML = '<h1>No se pudo abrir la base de datos local</h1><p class="mut">' + esc(err.message) + '</p><p class="mut">Si abres el archivo en modo privado o desde un visor que bloquea el almacenamiento, ábrelo en una ventana normal del navegador.</p>'; });
+</script>
+</body>
+</html>
